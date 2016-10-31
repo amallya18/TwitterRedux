@@ -52,7 +52,12 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+http://sendvid.com/asuvbvw1.mp4
+
+Part 2 http://sendvid.com/pqq3jp5p.mp4 (Sign out)
+
+Part3: (implicit Intent) http://sendvid.com/zxsk47ed.mp4
+
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
