@@ -30,6 +30,9 @@ import com.github.anmallya.twitterclient.activity.TweetListActivity;
 public class ComposeFragment extends DialogFragment {
 
     private EditText mEditText;
+    private ImageButton ib;
+    private ImageButton ibCancel;
+    private ImageButton ibDrafts;
 
     public ComposeFragment() {
     }
@@ -53,13 +56,10 @@ public class ComposeFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         mEditText = (EditText) view.findViewById(R.id.et_compose);
         mEditText.requestFocus();
-
-        ImageButton ib = (ImageButton) view.findViewById(R.id.ib_compose_profile);
-        ImageButton ibCancel = (ImageButton) view.findViewById(R.id.ib_compose_cancel);
-        ImageButton ibDrafts = (ImageButton) view.findViewById(R.id.ib_drafts);
-
+        ib = (ImageButton) view.findViewById(R.id.ib_compose_profile);
+        ibCancel = (ImageButton) view.findViewById(R.id.ib_compose_cancel);
+        ibDrafts = (ImageButton) view.findViewById(R.id.ib_drafts);
         if(checkDraftExist()){
-            System.out.println("############# draft exists");
             ibDrafts.setVisibility(View.VISIBLE);
             ibDrafts.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -68,34 +68,24 @@ public class ComposeFragment extends DialogFragment {
                     getActivity().startActivityForResult(intent, 200);
                 }
             });
-        }else{
-            System.out.println("############# draft doesnt exist");
         }
-
         ibCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cancelClicked();
             }
         });
+        setWindowAndPhotos();
+        setEditText(view);
+        setButtons(view);
+    }
 
-        String profileUrl = getArguments().getString("profile", "Enter Name");
-        Glide.with(getActivity()).load(profileUrl).into(ib);
-
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
-        getActivity().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
+    private void setEditText(View view){
         final EditText etCompose = (EditText)view.findViewById(R.id.et_compose);
         final TextView tvWordCount = (TextView)view.findViewById(R.id.tv_word_count);
-
         etCompose.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void afterTextChanged(Editable s) {}
-
             @Override
             public void beforeTextChanged(CharSequence s, int start,
                                           int count, int after) {
@@ -113,7 +103,9 @@ public class ComposeFragment extends DialogFragment {
                 tvWordCount.setText(wordCount+"");
             }
         });
+    }
 
+    private void setButtons(View view){
         Button tweetBtn = (Button)view.findViewById(R.id.btn_tweet);
         tweetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +117,16 @@ public class ComposeFragment extends DialogFragment {
         });
     }
 
+    private void setWindowAndPhotos(){
+        String profileUrl = getArguments().getString("profile", "Enter Name");
+        Glide.with(getActivity()).load(profileUrl).into(ib);
+
+        getDialog().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,7 +140,6 @@ public class ComposeFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        //Yes button clicked
                         saveDraft();
                         dismiss();
                         break;
@@ -156,16 +157,13 @@ public class ComposeFragment extends DialogFragment {
     }
 
     private void saveDraft() {
-        System.out.println("Save draft called");
         SharedPreferences prefs = getActivity().getSharedPreferences("drafts", 0);
         SharedPreferences.Editor editor = prefs.edit();
         int size;
         if(prefs.contains("drafts" + "_size")){
-            System.out.println("does contain");
             size = prefs.getInt("drafts" + "_size", 0);
             editor.putInt("drafts" +"_size", size+1);
         } else{
-            System.out.println("doesnt contain");
             size = 0;
             editor.putInt("drafts" +"_size", 1);
         }
