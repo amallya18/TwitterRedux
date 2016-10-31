@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<ImageButton
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="20dp"
+    android:layout_width="25dp"
+    android:layout_height="25dp"
+    android:id="@+id/ib_compose_cancel"
+    android:background="@android:color/transparent"
+    android:src="@drawable/ic_action_cancel"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentLeft="true"/>
+
+    <ImageButton
+        android:scaleType="centerCrop"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:id="@+id/ib_compose_profile"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageButton
+        android:scaleType="centerCrop"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_action_drafts"
+        android:id="@+id/ib_drafts"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"
+        android:layout_toLeftOf="@id/ib_compose_profile"/>
+    <LinearLayout
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:id="@+id/compose_ll"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="40dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_action_media"
+            android:id="@+id/ib_compose_media" />
+
+        <ImageButton
+            android:layout_marginLeft="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_action_location"
+            android:id="@+id/ib_compose_location"/>
+
+        <TextView
+            android:layout_marginLeft="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_word_count"
+            android:text="140" />
+        <Button
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_tweet"
+            android:text=" Tweet "
+            android:textColor="@color/white"
+            android:background="@color/colorAccent"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cccccc"
+        android:layout_above="@id/compose_ll"/>
+
+
+    <EditText
+        android:paddingTop="30dp"
+        android:paddingLeft="10dp"
+        android:gravity="top"
+        android:background="@android:color/transparent"
+        android:hint="What's happening?"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ib_compose_profile"
+        android:layout_above="@+id/compose_ll"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/et_compose"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

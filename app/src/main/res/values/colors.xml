@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark1">#303F9F</color>
+    <color name="colorPrimaryDark">#777777</color>
+    <color name="colorAccent1">#2196F3</color>
+    <color name="colorAccent">#2196F3</color>
+    <color name="grey">#cccccc</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="red">#FF0000</color>
+
+    <color name="favRed">#E51534</color>
+    <color name="darkGrey">#999999</color>
+    <color name="retweetGreen">#00FF00</color>
+</resources>

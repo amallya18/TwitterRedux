@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/root"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#efefef"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_alignParentTop="true"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#ffffff"
+        android:titleTextColor="#000000"
+        app:theme="@style/AppTheme.Toolbar"
+        app:layout_scrollFlags="scroll|enterAlways|snap"
+        app:titleTextAppearance="@style/AppTheme.Toolbar.Title"
+        app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+    <RelativeLayout
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="15dp"
+        android:layout_marginBottom="1dp"
+        android:background="#ffffff"
+        android:paddingBottom="5dp">
+        <ImageButton
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:layout_marginRight="15dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/iv_profile_pic"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"/>
+
+        <TextView
+            android:text="TextView"
+            android:textSize="@dimen/twitter_profile_name_size"
+            android:textColor="#000000"
+            android:layout_alignTop="@id/iv_profile_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/iv_profile_pic"
+            android:layout_toEndOf="@+id/iv_profile_pic"
+            android:id="@+id/tv_profile_name" />
+
+        <TextView
+            android:fontFamily="sans-serif-light"
+            android:textSize="@dimen/twitter_profile_handle_size"
+            android:textColor="#999999"
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_profile_name"
+            android:layout_toEndOf="@+id/iv_profile_pic"
+            android:layout_toRightOf="@+id/iv_profile_pic"
+            android:id="@+id/tv_profile_handle" />
+
+        <TextView
+            android:textSize="18dp"
+            android:text="TextView"
+            android:textColor="#000000"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_profile_pic"
+            android:id="@+id/tv_tweet"
+            android:autoLink="all"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="10dp"/>
+
+        <ImageView
+            android:scaleType="centerCrop"
+            android:layout_width="330dp"
+            android:layout_height="200dp"
+            android:layout_alignRight="@id/tv_tweet"
+            android:layout_alignLeft="@id/tv_tweet"
+            android:paddingBottom="10dp"
+            android:background="#ffffffff"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@+id/tv_tweet"
+            android:layout_toRightOf="@+id/iv_profile_pic"
+            android:id="@+id/iv_media" />
+
+        <TextView
+            android:fontFamily="sans-serif-light"
+            android:textSize="@dimen/twitter_profile_handle_size"
+            android:text="TextView"
+            android:textColor="#999999"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_media"
+            android:id="@+id/tv_created_time"/>
+        <LinearLayout
+            android:id="@+id/ll1"
+            android:layout_below="@id/tv_created_time"
+            android:layout_height="0.5dp"
+            android:background="#cccccc"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"/>
+
+        <TextView
+            android:textSize="@dimen/twitter_btn_text_size"
+            android:text="TextView"
+            android:textColor="#999999"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_below="@+id/ll1"
+            android:id="@+id/tv_retweet_count" />
+
+        <TextView
+            android:textSize="@dimen/twitter_btn_text_size"
+            android:text="RETWEETS"
+            android:textColor="#999999"
+            android:layout_alignBaseline="@id/tv_retweet_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:layout_marginRight="20dp"
+            android:layout_below="@+id/ll1"
+            android:layout_toRightOf="@+id/tv_retweet_count"
+            android:layout_toEndOf="@+id/tv_retweet_count"
+            android:id="@+id/tv_retweet_text" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_marginRight="10dp"
+            android:textColor="#999999"
+            android:layout_alignBaseline="@id/tv_retweet_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll1"
+            android:layout_toRightOf="@+id/tv_retweet_text"
+            android:textSize="@dimen/twitter_btn_text_size"
+            android:layout_toEndOf="@+id/tv_retweet_text"
+            android:id="@+id/tv_like_count" />
+
+        <TextView
+            android:textSize="@dimen/twitter_btn_text_size"
+            android:text="LIKES"
+            android:fontFamily="sans-serif-light"
+            android:textColor="#999999"
+            android:layout_alignBaseline="@id/tv_like_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/twitter_btn_right_margin"
+            android:layout_below="@+id/ll1"
+            android:layout_toRightOf="@+id/tv_like_count"
+            android:layout_toEndOf="@+id/tv_like_count"
+            android:id="@+id/tv_tweet_text" />
+
+        <LinearLayout
+            android:id="@+id/ll2"
+            android:layout_below="@id/tv_retweet_count"
+            android:layout_height="0.5dp"
+            android:background="#cccccc"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"/>
+
+        <ImageButton
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/twitter_btn_size"
+            android:layout_height="@dimen/twitter_btn_size"
+            android:background="#ffffffff"
+            android:src="@drawable/ic_vector_reply"
+            android:layout_below="@+id/ll2"
+            android:layout_marginRight="80dp"
+            android:id="@+id/iv_reply" />
+
+        <ToggleButton
+            android:layout_width="@dimen/twitter_btn_size"
+            android:layout_height="@dimen/twitter_btn_size"
+            android:background="@drawable/retweet_btn_toggle"
+            android:layout_below="@+id/ll2"
+            android:scaleType="fitXY"
+            android:textOn=""
+            android:textOff=""
+            android:layout_marginRight="80dp"
+            android:layout_toRightOf="@+id/iv_reply"
+            android:layout_toEndOf="@+id/iv_reply"
+            android:id="@+id/iv_retweet" />
+
+
+        <ToggleButton
+            android:scaleType="fitXY"
+            android:layout_marginRight="80dp"
+            android:layout_width="@dimen/twitter_btn_size_small"
+            android:layout_height="@dimen/twitter_btn_size_small"
+            android:background="@drawable/like_btn_toggle"
+            android:layout_below="@+id/ll2"
+            android:textOn=""
+            android:textOff=""
+            android:layout_toRightOf="@+id/iv_retweet"
+            android:layout_toEndOf="@+id/iv_retweet"
+            android:id="@+id/iv_like" />
+
+        <ImageButton
+            android:scaleType="fitXY"
+            android:background="#ffffffff"
+            android:layout_width="@dimen/twitter_btn_size_small"
+            android:layout_height="@dimen/twitter_btn_size_small"
+            android:src="@drawable/ic_vector_email"
+            android:layout_below="@+id/ll2"
+            android:layout_toRightOf="@+id/iv_like"
+            android:layout_toEndOf="@+id/iv_like"
+            android:id="@+id/iv_direct_msg" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_reply_holder"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="#ffffff"
+        android:paddingLeft="10dp"
+        android:focusableInTouchMode="true"
+        android:layout_width="match_parent">
+        <EditText
+            android:textColorHint="#999999"
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/et_reply"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"/>
+
+        <Button
+            android:text="REPLY"
+            android:background="@android:color/transparent"
+            android:textColor="@color/colorAccent"
+            android:id="@+id/btn_reply"
+            android:layout_width="0dp"
+            android:onClick="replyClicked"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2" />
+    </LinearLayout>
+</RelativeLayout>
