@@ -1,15 +1,13 @@
 package com.github.anmallya.twitterclient.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 
 import com.github.anmallya.twitterclient.R;
-import com.github.anmallya.twitterclient.fragments.ComposeFragment;
+
 
 /**
  * Created by anmallya on 10/30/2016.

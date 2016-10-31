@@ -70,13 +70,13 @@
             android:id="@+id/tv_word_count"
             android:text="140" />
         <Button
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_tweet"
-            android:text=" Tweet "
+            android:text="Tweet"
             android:textColor="@color/white"
             android:background="@color/colorAccent"/>
     </LinearLayout>

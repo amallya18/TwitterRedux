@@ -26,12 +26,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.github.anmallya.twitterclient.R;
 import com.github.anmallya.twitterclient.adapter.TweetsAdapter;
 import com.github.anmallya.twitterclient.application.RestApplication;
@@ -39,42 +37,40 @@ import com.github.anmallya.twitterclient.data.DbHelper;
 import com.github.anmallya.twitterclient.fragments.ComposeFragment;
 import com.github.anmallya.twitterclient.helper.EndlessRecyclerViewScrollListener;
 import com.github.anmallya.twitterclient.helper.ItemClickSupport;
-import com.github.anmallya.twitterclient.helper.RecyclerViewSwipeListener;
 import com.github.anmallya.twitterclient.models.Entity;
 import com.github.anmallya.twitterclient.models.Media;
 import com.github.anmallya.twitterclient.models.Tweet;
 import com.github.anmallya.twitterclient.models.User;
-import com.github.anmallya.twitterclient.network.RestClient;
+import com.github.anmallya.twitterclient.network.NetworkUtils;
+import com.github.anmallya.twitterclient.network.TwitterClient;
 import com.github.anmallya.twitterclient.utils.Constants;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-import static android.R.attr.data;
+import static com.github.anmallya.twitterclient.models.User_Table.url;
 
 public class TweetListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-// Red like E51534
     private ArrayList<Tweet> tweetList;
     private TweetsAdapter tweetsAdapter;
-    private RestClient client;
+    private TwitterClient client;
 
     private TextView tvNavHeader1, tvNavHeader2;
     private ImageView ivNavHeader; LinearLayout lvNavHeader;
@@ -83,19 +79,15 @@ public class TweetListActivity extends AppCompatActivity
     private RelativeLayout relativeLayout;
 
     private Toolbar toolbar;
-
     private User loggedInUser;
-
+    private ComposeFragment composeDialog;
     private long max = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweet_list);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        relativeLayout = (RelativeLayout) findViewById(R.id.root);
-        getSupportActionBar().setTitle("Home");
+        setViews();
         tweetList = new ArrayList<Tweet>();
         client = RestApplication.getRestClient();
         tweetsAdapter = new TweetsAdapter(this, tweetList, client);
@@ -106,6 +98,13 @@ public class TweetListActivity extends AppCompatActivity
         getUserCred();
     }
 
+
+    private void setViews(){
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        relativeLayout = (RelativeLayout) findViewById(R.id.root);
+        getSupportActionBar().setTitle("Home");
+    }
 
     private void setSwipeRefreshLayout(){
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
@@ -171,68 +170,45 @@ public class TweetListActivity extends AppCompatActivity
         client.getTweetTimelineList(max, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                ArrayList<Tweet> tweetListNew = Tweet.getTweetList(json.toString());
-                System.out.println(json);
-                tweetList.addAll(tweetListNew);
-                tweetsAdapter.notifyDataSetChanged();
-                for(Tweet tweet:tweetListNew){
-                    System.out.println(tweet.toString());
-                    Entity entities = tweet.getEntities();
-                    if(entities.getMedia() != null){
-                        if(entities.getMedia().size()>0){
-                            for(Media media:entities.getMedia()){
-                                media.setTweetId(tweet.getId());
-                                media.save();
-                            }
-                        }
-                    }
-                    tweet.getUser().save();
-                    tweet.save();
-                }
-                max = tweetListNew.get(tweetListNew.size()-1).getId();
-                mSwipeRefreshLayout.setRefreshing(false);
+               processTweetJson(json);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject j) {
-                //super.onFailure(statusCode, headers, responseString, throwable);
                 Log.d("Failed: ", ""+statusCode);
                 Log.d("Error : ", "" + throwable);
             }
         });
     }
 
+    private void processTweetJson(JSONArray json){
+        ArrayList<Tweet> tweetListNew = Tweet.getTweetList(json.toString());
+        tweetList.addAll(tweetListNew);
+        tweetsAdapter.notifyDataSetChanged();
+        for(Tweet tweet:tweetListNew){
+            System.out.println(tweet.toString());
+            Entity entities = tweet.getEntities();
+            if(entities.getMedia() != null){
+                if(entities.getMedia().size()>0){
+                    for(Media media:entities.getMedia()){
+                        media.setTweetId(tweet.getId());
+                        media.save();
+                    }
+                }
+            }
+            tweet.getUser().save();
+            tweet.save();
+        }
+        max = tweetListNew.get(tweetListNew.size()-1).getId();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+
     private void getUserCred(){
         client.getCurrentUserInfo(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
-                System.out.println(json);
-                Gson gson = new Gson();
-                JsonParser parser = new JsonParser();
-                JsonElement tweetElement = parser.parse(json.toString());
-                JsonObject jObject = tweetElement.getAsJsonObject();
-                User user = gson.fromJson(jObject, User.class);
-
-                loggedInUser = user;
-                System.out.println("Banner url"+user.getBannerUrl());
-
-                tvNavHeader1.setText(user.getName());
-                tvNavHeader2.setText("@"+user.getScreenName());
-
-                Glide.with(TweetListActivity.this)
-                        .load(user.getProfileImageUrl())
-                        .bitmapTransform(new RoundedCornersTransformation(TweetListActivity.this, 5, 5))
-                        .into(ivNavHeader);
-                System.out.println("Url is "+user.getBannerUrl());
-                Glide.with(TweetListActivity.this).load(user.getBannerUrl()).asBitmap().into(new SimpleTarget<Bitmap>(500, 500) {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        Drawable drawable = new BitmapDrawable(resource);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            lvNavHeader.setBackground(drawable);
-                        }
-                    }
-                });
+               processUserCred(json);
             }
 
             @Override
@@ -241,21 +217,54 @@ public class TweetListActivity extends AppCompatActivity
                 Log.d("Failed: ", ""+statusCode);
                 Log.d("Error : ", "" + throwable);
                 if(throwable instanceof  java.io.IOException){
-                    System.out.println("No internet connection");
-                    List<Tweet> tweetListDb = SQLite.select().
-                            from(Tweet.class).queryList();
-                    for(Tweet t:tweetListDb){
-                        t.setEntities(new Entity());
-                        List<Media> mediaList = DbHelper.getMediaForTweet(t.getId());
-                        t.getEntities().setMedia(mediaList);
-                        //System.out.println(t.toString());
-                    }
-                    tweetList.addAll(tweetListDb);
-                    tweetsAdapter.notifyDataSetChanged();
+                   noInternet();
                 }
             }
         });
 
+    }
+
+    private void processUserCred(JSONObject json){
+        Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
+        JsonElement tweetElement = parser.parse(json.toString());
+        JsonObject jObject = tweetElement.getAsJsonObject();
+        User user = gson.fromJson(jObject, User.class);
+        loggedInUser = user;
+        tvNavHeader1.setText(user.getName());
+        tvNavHeader2.setText("@"+user.getScreenName());
+        Picasso.with(this)
+                .load(user.getProfileImageUrl())
+                .into(ivNavHeader);
+        /*
+        Glide.with(TweetListActivity.this)
+                .load(user.getProfileImageUrl())
+                .bitmapTransform(new RoundedCornersTransformation(TweetListActivity.this, 5, 5))
+                .into(ivNavHeader);*/
+        Glide.with(TweetListActivity.this).load(user.getBannerUrl()).asBitmap().into(new SimpleTarget<Bitmap>(500, 500) {
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                Drawable drawable = new BitmapDrawable(resource);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    lvNavHeader.setBackground(drawable);
+                }
+            }
+        });
+    }
+
+    private void noInternet(){
+        System.out.println("No internet connection");
+        Snackbar snackbar = Snackbar
+                .make(relativeLayout, "No Internet connection", Snackbar.LENGTH_LONG);
+        List<Tweet> tweetListDb = SQLite.select().
+                from(Tweet.class).queryList();
+        for(Tweet t:tweetListDb){
+            t.setEntities(new Entity());
+            List<Media> mediaList = DbHelper.getMediaForTweet(t.getId());
+            t.getEntities().setMedia(mediaList);
+        }
+        tweetList.addAll(tweetListDb);
+        tweetsAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -288,66 +297,35 @@ public class TweetListActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
+        int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        /*
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_sign_out) {
+            client.clearAccessToken();
+            finish();
         }
-        */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    ComposeFragment composeDialog;
+
     private void showComposeDialog() {
         FragmentManager fm = getSupportFragmentManager();
         composeDialog = ComposeFragment.newInstance(loggedInUser.getProfileImageUrl());
         composeDialog.show(fm, "fragment_alert");
     }
 
-    public void postTweet(String tweet){
-        client.postTweet(tweet, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
-                Snackbar snackbar = Snackbar
-                        .make(relativeLayout, "Tweet Posted Successfully", Snackbar.LENGTH_LONG);
-                snackbar.show();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject j) {
-                Snackbar snackbar = Snackbar
-                        .make(relativeLayout, "Tweet posting failure", Snackbar.LENGTH_LONG);
-                Log.d("Failed: ", ""+statusCode);
-                Log.d("Error : ", "" + throwable);
-            }
-        });
+    public void postTweet(String newTweet){
+        NetworkUtils.postTweets(client, newTweet, relativeLayout);
         Tweet t = new Tweet();
-        t.setText(tweet);
+        t.setText(newTweet);
         t.setUser(loggedInUser);
         t.setEntities(new Entity());
         t.setCreatedAt(Constants.JUST_NOW);

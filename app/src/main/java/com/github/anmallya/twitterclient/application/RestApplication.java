@@ -3,7 +3,7 @@ package com.github.anmallya.twitterclient.application;
 import android.app.Application;
 import android.content.Context;
 
-import com.github.anmallya.twitterclient.network.RestClient;
+import com.github.anmallya.twitterclient.network.TwitterClient;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowLog;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -25,7 +25,7 @@ public class RestApplication extends Application {
         RestApplication.context = this;
     }
 
-    public static RestClient getRestClient() {
-        return (RestClient) RestClient.getInstance(RestClient.class, RestApplication.context);
+    public static TwitterClient getRestClient() {
+        return (TwitterClient) TwitterClient.getInstance(TwitterClient.class, RestApplication.context);
     }
 }

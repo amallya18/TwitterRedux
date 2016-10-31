@@ -123,8 +123,6 @@ public class Tweet extends BaseModel {
         this.retweetCount = retweetCount;
     }
 
-
-
     public boolean isFavorited() {
         return favorited;
     }
@@ -158,10 +156,6 @@ public class Tweet extends BaseModel {
         for(int i = 0; i < length; i ++){
             Gson gson = new Gson();
             Tweet tweet = gson.fromJson(jArray.get(i), Tweet.class);
-            //System.out.println("$$$$$$$$ "+jArray.get(i).getAsJsonObject());
-            //JsonElement j = jArray.get(i).getAsJsonObject().get("favourites_count");
-            //int favCount = j.getAsInt();
-            //tweet.setFavouritesCount(favCount);
             tweetList.add(tweet);
         }
         return tweetList;

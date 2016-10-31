@@ -14,6 +14,10 @@ import com.github.anmallya.twitterclient.R;
  */
 public class TweetListViewHolder extends RecyclerView.ViewHolder {
 
+    private ToggleButton ivRetweet;
+    private TextView tvProfileName, tvProfileHandler, tvCreatedTime, tvTweet, tvRetweetCount, tvLikeCount;
+    private ImageView ivMedia;
+
     public ImageButton getIvProfilePic() {
         return ivProfilePic;
     }
@@ -94,8 +98,6 @@ public class TweetListViewHolder extends RecyclerView.ViewHolder {
         this.ivMedia = ivMedia;
     }
 
-
-
     public void setIvLike(ToggleButton ivLike) {
         this.ivLike = ivLike;
     }
@@ -116,13 +118,11 @@ public class TweetListViewHolder extends RecyclerView.ViewHolder {
         this.ivRetweet = ivRetweet;
     }
 
-    private ToggleButton ivRetweet;
-    private TextView tvProfileName, tvProfileHandler, tvCreatedTime, tvTweet, tvRetweetCount, tvLikeCount;
-    private ImageView ivMedia;
-
 
     public TweetListViewHolder(View v) {
         super(v);
+
+        // set text views
         setTvCreatedTime((TextView)v.findViewById(R.id.tv_created_time));
         setTvLikeCount((TextView)v.findViewById(R.id.tv_like_count));
         setTvProfileHandler((TextView)v.findViewById(R.id.tv_profile_handle));
@@ -130,10 +130,13 @@ public class TweetListViewHolder extends RecyclerView.ViewHolder {
         setTvRetweetCount((TextView)v.findViewById(R.id.tv_retweet_count));
         setTvTweet((TextView)v.findViewById(R.id.tv_tweet));
 
+        // set image views
         setIvDirectMsg((ImageButton)v.findViewById(R.id.iv_direct_msg));
-        setIvLike ((ToggleButton)v.findViewById(R.id.iv_like));
         setIvProfilePic((ImageButton)v.findViewById(R.id.iv_profile_pic));
         setIvReply((ImageButton)v.findViewById(R.id.iv_reply));
+
+        // set toggle buttons
+        setIvLike ((ToggleButton)v.findViewById(R.id.iv_like));
         setIvRetweet((ToggleButton)v.findViewById(R.id.iv_retweet));
 
         setIvMedia((ImageView)v.findViewById(R.id.iv_media));

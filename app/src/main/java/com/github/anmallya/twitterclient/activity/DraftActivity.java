@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 import com.github.anmallya.twitterclient.R;
 
@@ -24,12 +23,20 @@ public class DraftActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draft);
+        setupToolbar();
+        draftList = new ArrayList<String>();
+        readValues();
+        setUpListView();
+    }
+
+    private void setupToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Drafts");
         getSupportActionBar().setElevation(5);
-        draftList = new ArrayList<String>();
-        readValues();
+    }
+
+    private void setUpListView(){
         listview = (ListView)findViewById(R.id.list_view);
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, draftList);
         listview.setAdapter(adapter);

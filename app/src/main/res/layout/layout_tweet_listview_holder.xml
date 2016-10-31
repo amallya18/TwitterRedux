@@ -85,6 +85,7 @@
         android:layout_alignLeft="@id/tv_tweet"
         android:paddingBottom="10dp"
         android:background="#ffffffff"
+        android:layout_marginBottom="5dp"
         android:visibility="gone"
         android:layout_below="@+id/tv_tweet"
         android:layout_toRightOf="@+id/iv_profile_pic"

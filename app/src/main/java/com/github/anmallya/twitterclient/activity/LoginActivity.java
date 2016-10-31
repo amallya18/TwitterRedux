@@ -8,13 +8,13 @@ import android.widget.Toast;
 
 import com.codepath.oauth.OAuthLoginActionBarActivity;
 import com.github.anmallya.twitterclient.R;
-import com.github.anmallya.twitterclient.network.RestClient;
+import com.github.anmallya.twitterclient.network.TwitterClient;
 
 /**
  * Created by anmallya on 10/27/2016.
  */
 
-public class LoginActivity extends OAuthLoginActionBarActivity<RestClient> {
+public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,25 +22,22 @@ public class LoginActivity extends OAuthLoginActionBarActivity<RestClient> {
         setContentView(R.layout.activity_login);
     }
 
-    // Inflate the menu; this adds items to the action bar if it is present.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.login, menu);
         return true;
     }
 
-    // OAuth authenticated successfully, launch primary authenticated activity
-    // i.e Display application "homepage"
+
     @Override
     public void onLoginSuccess() {
         System.out.println("############# "+"success");
-        Toast.makeText(this,"Success", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,"Success", Toast.LENGTH_LONG).show();
         Intent i = new Intent(this, TweetListActivity.class);
         startActivity(i);
     }
 
-    // OAuth authentication flow failed, handle the error
-    // i.e Display an error dialog or toast
+
     @Override
     public void onLoginFailure(Exception e) {
         System.out.println("############# "+"failure");
@@ -48,11 +45,8 @@ public class LoginActivity extends OAuthLoginActionBarActivity<RestClient> {
         e.printStackTrace();
     }
 
-    // Click handler method for the button used to start OAuth flow
-    // Uses the client to initiate OAuth authorization
-    // This should be tied to a button used to login
     public void loginToRest(View view) {
-        Toast.makeText(this,"Button clicked", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,"Button clicked", Toast.LENGTH_LONG).show();
         getClient().connect();
     }
 

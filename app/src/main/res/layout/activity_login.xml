@@ -6,14 +6,19 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#00aced"
     tools:context=".activity.LoginActivity" >
 
     <Button
+        android:stateListAnimator="@null"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
+        android:layout_alignParentBottom="true"
         android:onClick="loginToRest"
+        android:background="@color/white"
+        android:textColor="@color/black"
         android:text="@string/login_label" />
 
 </RelativeLayout>

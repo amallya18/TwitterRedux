@@ -13,9 +13,7 @@ import java.util.List;
  */
 
 public class DbHelper {
-
     public static List<Media> getMediaForTweet(long id){
-        //List<Media> mediaList = SQLite.select().from(Media.class).where(Condition.column(Media_Table.tweetId).eq(id)).queryList();
         List<Media> mediaList = SQLite.select().from(Media.class).where(Media_Table.tweetId.is(id)).queryList();
         return mediaList;
     }

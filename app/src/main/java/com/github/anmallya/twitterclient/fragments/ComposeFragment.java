@@ -32,9 +32,6 @@ public class ComposeFragment extends DialogFragment {
     private EditText mEditText;
 
     public ComposeFragment() {
-        // Empty constructor is required for DialogFragment
-        // Make sure not to add arguments to the constructor
-        // Use `newInstance` instead as shown below
     }
 
     public static ComposeFragment newInstance(String profileImage) {
@@ -126,8 +123,8 @@ public class ComposeFragment extends DialogFragment {
                 dismiss();
             }
         });
-
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

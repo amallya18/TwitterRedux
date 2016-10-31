@@ -1,35 +1,22 @@
 package com.github.anmallya.twitterclient.adapter;
 
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 
 import com.bumptech.glide.Glide;
 import com.github.anmallya.twitterclient.R;
-import com.github.anmallya.twitterclient.application.RestApplication;
 import com.github.anmallya.twitterclient.models.Tweet;
 import com.github.anmallya.twitterclient.network.NetworkUtils;
-import com.github.anmallya.twitterclient.network.RestClient;
+import com.github.anmallya.twitterclient.network.TwitterClient;
 import com.github.anmallya.twitterclient.utils.Constants;
 import com.github.anmallya.twitterclient.utils.Utils;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONObject;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
@@ -43,9 +30,9 @@ public class TweetsAdapter extends
         return mContext;
     }
     private Context mContext;
-    private RestClient client;
+    private TwitterClient client;
 
-    public TweetsAdapter(Context context, List<Tweet> tweetList, RestClient client) {
+    public TweetsAdapter(Context context, List<Tweet> tweetList, TwitterClient client) {
         this.tweetList = tweetList;
         this.mContext = context;
         this.client = client;
@@ -71,17 +58,21 @@ public class TweetsAdapter extends
                 configureViewHolder(vh1, position);
     }
 
-    private void configureViewHolder(final TweetListViewHolder vh, int position) {
-        final Tweet tweet = tweetList.get(position);
-
+    private void setText(TweetListViewHolder vh, Tweet tweet){
         vh.getTvProfileName().setText(tweet.getUser().getName());
         vh.getTvProfileHandler().setText("@"+tweet.getUser().getScreenName());
+        vh.getTvTweet().setText(tweet.getText());
+        vh.getTvCreatedTime().setText(Utils.getTwitterDate(tweet.getCreatedAt()));
+        vh.getTvLikeCount().setText(tweet.getFavouritesCount()+"");
+        vh.getTvRetweetCount().setText(tweet.getRetweetCount()+"");
+    }
 
-
+    private void setToggleButton(TweetListViewHolder vh, Tweet tweet){
         vh.getIvLike().setChecked(tweet.isFavorited());
         vh.getIvRetweet().setChecked(tweet.isRetweeted());
+    }
 
-
+    private void setCountColor(TweetListViewHolder vh, Tweet tweet){
         if (tweet.isFavorited()) {
             vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.favRed));
         } else{
@@ -94,40 +85,9 @@ public class TweetsAdapter extends
             vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
         }
 
-        vh.getIvLike().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    NetworkUtils.favorited(client, tweet.getId());
-                    vh.getTvLikeCount().setText(tweet.getFavouritesCount()+1+"");
-                    vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.favRed));
-                } else {
-                    NetworkUtils.unFavorited(client, tweet.getId());
-                    vh.getTvLikeCount().setText(tweet.getFavouritesCount()-1+"");
-                    vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
-                }
-            }
-        });
+    }
 
-        vh.getIvRetweet().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    NetworkUtils.retweet(client, tweet.getId());
-                    vh.getTvRetweetCount().setText(tweet.getRetweetCount()+1+"");
-                    vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.retweetGreen));
-                } else {
-                    NetworkUtils.unRetweet(client, tweet.getId());
-                    vh.getTvRetweetCount().setText(tweet.getRetweetCount()-1+"");
-                    vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
-                }
-            }
-        });
-
-        vh.getTvTweet().setText(tweet.getText());
-        vh.getTvCreatedTime().setText(Utils.getTwitterDate(tweet.getCreatedAt()));
-
-        vh.getTvLikeCount().setText(tweet.getFavouritesCount()+"");
-        vh.getTvRetweetCount().setText(tweet.getRetweetCount()+"");
-
+    private void setImages(TweetListViewHolder vh, Tweet tweet){
         if(tweet.getEntities().getMedia()!=null){
             if(tweet.getEntities().getMedia().size() > 0){
                 vh.getIvMedia().setVisibility(View.VISIBLE);
@@ -143,4 +103,84 @@ public class TweetsAdapter extends
         ImageButton ib = vh.getIvProfilePic();
         Glide.with(getContext()).load(tweet.getUser().getProfileImageUrl()).bitmapTransform(new RoundedCornersTransformation(getContext(), Constants.RS, Constants.RS)).placeholder(R.color.grey).into(ib);
     }
+
+    private void setToggleListners(final TweetListViewHolder vh,final  Tweet tweet){
+        (vh.getIvLike()).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                tweet.setFavorited(!tweet.isFavorited());
+                if(tweet.isFavorited()) {
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$ LIKE");
+                    NetworkUtils.favorited(client, tweet.getId());
+                    vh.getTvLikeCount().setText(tweet.getFavouritesCount()+1+"");
+                    vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.favRed));
+                } else {
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$ UN LIKE");
+                    NetworkUtils.unFavorited(client, tweet.getId());
+                    vh.getTvLikeCount().setText(tweet.getFavouritesCount()-1+"");
+                    vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
+                }
+            }
+        });
+
+        (vh.getIvRetweet()).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                tweet.setRetweeted(!tweet.isRetweeted());
+                if(tweet.isRetweeted()) {
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$ RETWEET");
+                    NetworkUtils.retweet(client, tweet.getId());
+                    vh.getTvRetweetCount().setText(tweet.getRetweetCount()+1+"");
+                    vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.retweetGreen));
+                } else {
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$ UNRETWEET");
+                    NetworkUtils.unRetweet(client, tweet.getId());
+                    vh.getTvRetweetCount().setText(tweet.getRetweetCount()-1+"");
+                    vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
+                }
+            }
+        });
+
+
+    }
+
+    private void configureViewHolder(final TweetListViewHolder vh, int position) {
+        final Tweet tweet = tweetList.get(position);
+        setText(vh, tweet);
+        setToggleButton(vh, tweet);
+        setCountColor(vh, tweet);
+        setImages(vh, tweet);
+        setToggleListners(vh, tweet);
+    }
+
+     /*
+        vh.getIvLike().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$ LIKE");
+                    NetworkUtils.favorited(client, tweet.getId());
+                    vh.getTvLikeCount().setText(tweet.getFavouritesCount()+1+"");
+                    vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.favRed));
+                } else {
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$ UN LIKE");
+                    NetworkUtils.unFavorited(client, tweet.getId());
+                    vh.getTvLikeCount().setText(tweet.getFavouritesCount()-1+"");
+                    vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
+                }
+            }
+        });
+
+        vh.getIvRetweet().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$ RETWEET");
+                    NetworkUtils.retweet(client, tweet.getId());
+                    vh.getTvRetweetCount().setText(tweet.getRetweetCount()+1+"");
+                    vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.retweetGreen));
+                } else {
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$ UNRETWEET");
+                    NetworkUtils.unRetweet(client, tweet.getId());
+                    vh.getTvRetweetCount().setText(tweet.getRetweetCount()-1+"");
+                    vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
+                }
+            }
+        });*/
 }
