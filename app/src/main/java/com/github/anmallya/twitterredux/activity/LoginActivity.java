@@ -14,7 +14,9 @@ import com.github.anmallya.twitterredux.network.TwitterClient;
  */
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
-
+    /*
+        Twitter Redux
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
