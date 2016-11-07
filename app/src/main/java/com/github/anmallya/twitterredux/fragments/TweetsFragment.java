@@ -58,14 +58,10 @@ public abstract class TweetsFragment extends Fragment {
     protected ArrayList<Tweet> tweetList;
     protected TweetsAdapter tweetsAdapter;
     protected TwitterClient client;
-
     protected SwipeRefreshLayout mSwipeRefreshLayout;
     private RelativeLayout relativeLayout;
-
     protected long max = -1;
-
     protected int mPage;
-
     protected AVLoadingIndicatorView avi;
 
     public TweetsFragment() {
@@ -97,7 +93,6 @@ public abstract class TweetsFragment extends Fragment {
         avi.show();
         getTweets();
     }
-
 
     private void setSwipeRefreshLayout(){
         mSwipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipeRefreshLayout);

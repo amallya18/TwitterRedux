@@ -17,13 +17,13 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
     /*
         Twitter Redux
 
-        part 1
+        part 1: home, mentions, direct message, search.
         http://sendvid.com/6ng53ae7.mp4
 
-        part 2
+        part 2: friend profile
+        http://sendvid.com/b84g1qaa.mp4
 
-
-        part 3
+        part 3: current user profile
         http://sendvid.com/sybxss0f.mp4
     */
     @Override

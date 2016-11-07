@@ -59,6 +59,13 @@ public class ComposeFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setViews(view);
+        setWindowAndPhotos();
+        setEditText(view);
+        setButtons(view);
+    }
+
+    private void setViews(View view){
         mEditText = (EditText) view.findViewById(R.id.et_compose);
         mEditText.requestFocus();
         ib = (ImageButton) view.findViewById(R.id.ib_compose_profile);
@@ -80,9 +87,6 @@ public class ComposeFragment extends DialogFragment {
                 cancelClicked();
             }
         });
-        setWindowAndPhotos();
-        setEditText(view);
-        setButtons(view);
     }
 
     private void setEditText(View view){
@@ -124,7 +128,6 @@ public class ComposeFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 String tweet = mEditText.getText().toString();
-                //((TweetListActivity)getActivity()).postTweet(tweet);
                 listener.onTweetPosted(tweet);
                 dismiss();
             }
@@ -151,10 +154,8 @@ public class ComposeFragment extends DialogFragment {
     private void setWindowAndPhotos(){
         String profileUrl = getArguments().getString(PROFILE_PIC, "Enter Name");
         Glide.with(getActivity()).load(profileUrl).into(ib);
-
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
@@ -181,7 +182,6 @@ public class ComposeFragment extends DialogFragment {
                 }
             }
         };
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Save Draft?").setPositiveButton("Save", dialogClickListener)
                 .setNegativeButton("Delete", dialogClickListener).show();
