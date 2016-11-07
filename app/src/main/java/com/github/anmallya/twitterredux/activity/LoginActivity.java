@@ -16,6 +16,15 @@ import com.github.anmallya.twitterredux.network.TwitterClient;
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
     /*
         Twitter Redux
+
+        part 1
+        http://sendvid.com/6ng53ae7.mp4
+
+        part 2
+
+
+        part 3
+        http://sendvid.com/sybxss0f.mp4
     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +41,6 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 
     @Override
     public void onLoginSuccess() {
-        System.out.println("############# "+"success");
-        //Toast.makeText(this,"Success", Toast.LENGTH_LONG).show();
         Intent i = new Intent(this, TweetListActivity.class);
         startActivity(i);
     }
@@ -41,13 +48,10 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 
     @Override
     public void onLoginFailure(Exception e) {
-        System.out.println("############# "+"failure");
-        //Toast.makeText(this,"Failure", Toast.LENGTH_LONG).show();
         e.printStackTrace();
     }
 
     public void loginToRest(View view) {
-        //Toast.makeText(this,"Button clicked", Toast.LENGTH_LONG).show();
         getClient().connect();
     }
 

@@ -28,13 +28,9 @@ import com.github.anmallya.twitterredux.network.TwitterClient;
 import com.github.anmallya.twitterredux.utils.Consts;
 import com.github.anmallya.twitterredux.utils.Utils;
 import com.squareup.picasso.Picasso;
-
 import org.parceler.Parcels;
-
 import java.util.List;
 import java.util.regex.Pattern;
-
-//import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
@@ -142,12 +138,10 @@ public class TweetsAdapter extends
                         getContext().startActivity(intent);
                     }
                 });
-                System.out.println("Media url: "+tweet.getEntities().getMedia().get(0).getMediaUrl());
                 Picasso.with(mContext).
                         load(tweet.getEntities().getMedia().get(0).getMediaUrl())
                         .transform(new RoundedCornersTransformation(Consts.RL, Consts.RL)).
                         placeholder(R.color.grey).into(vh.getIvMedia());
-                //Glide.with(getContext()).load(tweet.getEntities().getMedia().get(0).getMediaUrl()).bitmapTransform(new jp.wasabeef.glide.transformations.RoundedCornersTransformation(getContext(), Consts.RL, Consts.RL)).placeholder(R.color.grey).into(vh.getIvMedia());
             } else{
                 vh.getIvMedia().setVisibility(GONE);
             }
@@ -155,7 +149,9 @@ public class TweetsAdapter extends
         else {
             vh.getIvMedia().setVisibility(GONE);
         }
+    }
 
+    private void setImageButtons(TweetListViewHolder vh, final Tweet tweet){
         ImageButton ibReply = vh.getIvReply();
         ibReply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,7 +159,6 @@ public class TweetsAdapter extends
                 showComposeDialog(tweet.getUser());
             }
         });
-
         ImageButton ibMessage = vh.getIvDirectMsg();
         ibMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,7 +168,6 @@ public class TweetsAdapter extends
                 getContext().startActivity(intent);
             }
         });
-
         ImageView ib = vh.getIvProfilePic();
         ib.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,8 +179,6 @@ public class TweetsAdapter extends
         });
         Picasso.with(mContext).load(tweet.getUser().getProfileImageUrl())
                 .transform(new RoundedCornersTransformation(Consts.RL, Consts.RL)).placeholder(R.color.grey).into(ib);
-
-        //Glide.with(getContext()).load(tweet.getUser().getProfileImageUrl()).bitmapTransform(new RoundedCornersTransformation(getContext(), 6, 6)).placeholder(R.color.grey).into(ib);
     }
 
     private void setToggleListners(final TweetListViewHolder vh,final  Tweet tweet){
@@ -194,12 +186,10 @@ public class TweetsAdapter extends
             public void onClick(View arg0) {
                 tweet.setFavorited(!tweet.isFavorited());
                 if(tweet.isFavorited()) {
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$ LIKE");
                     NetworkUtils.favorited(client, tweet.getId());
                     vh.getTvLikeCount().setText(tweet.getFavouritesCount()+1+"");
                     vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.favRed));
                 } else {
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$ UN LIKE");
                     NetworkUtils.unFavorited(client, tweet.getId());
                     vh.getTvLikeCount().setText(tweet.getFavouritesCount()-1+"");
                     vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
@@ -211,12 +201,10 @@ public class TweetsAdapter extends
             public void onClick(View arg0) {
                 tweet.setRetweeted(!tweet.isRetweeted());
                 if(tweet.isRetweeted()) {
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$ RETWEET");
                     NetworkUtils.retweet(client, tweet.getId());
                     vh.getTvRetweetCount().setText(tweet.getRetweetCount()+1+"");
                     vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.retweetGreen));
                 } else {
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$ UNRETWEET");
                     NetworkUtils.unRetweet(client, tweet.getId());
                     vh.getTvRetweetCount().setText(tweet.getRetweetCount()-1+"");
                     vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
@@ -233,6 +221,7 @@ public class TweetsAdapter extends
         setToggleButton(vh, tweet);
         setCountColor(vh, tweet);
         setImages(vh, tweet);
+        setImageButtons(vh, tweet);
         setToggleListners(vh, tweet);
     }
 

@@ -66,21 +66,10 @@ public abstract class TweetsFragment extends Fragment {
 
     protected int mPage;
 
-    private OnFragmentInteractionListener mListener;
     protected AVLoadingIndicatorView avi;
 
     public TweetsFragment() {
-        // Required empty public constructor
     }
-
-    /*
-    public static TweetsFragment newInstance(int page) {
-        TweetsFragment fragment = new TweetsFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
-        fragment.setArguments(args);
-        return fragment;
-    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,41 +98,12 @@ public abstract class TweetsFragment extends Fragment {
         getTweets();
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        /*
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
 
     private void setSwipeRefreshLayout(){
         mSwipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Refresh items
                 max = -1;
                 tweetList.clear();
                 tweetsAdapter.notifyDataSetChanged();
@@ -162,61 +122,29 @@ public abstract class TweetsFragment extends Fragment {
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    /*
-    protected void getTweets() {
-        if(mPage == 0){
-            client.getTweetTimelineList(max, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                    processTweetJson(json);
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject j) {
-                    Log.d("Failed: ", "" + statusCode);
-                    Log.d("Error : ", "" + throwable);
-                }
-            });
-        } else if(mPage == 2){
-            client.getMentionsTimelineList(max, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                    processTweetJson(json);
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject j) {
-                    Log.d("Failed: ", "" + statusCode);
-                    Log.d("Error : ", "" + throwable);
-                }
-            });
-        }
-        else{
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
-    }*/
-
     protected abstract void getTweets();
 
-
-    protected void processTweetJson(JSONArray json){
+    protected void processTweetJson(JSONArray json, boolean save){
         avi.hide();
         ArrayList<Tweet> tweetListNew = Tweet.getTweetList(json.toString());
         tweetList.addAll(tweetListNew);
         tweetsAdapter.notifyDataSetChanged();
-        for(Tweet tweet:tweetListNew){
-            System.out.println(tweet.toString());
-            Entity entities = tweet.getEntities();
-            if(entities.getMedia() != null){
-                if(entities.getMedia().size()>0){
-                    for(Media media:entities.getMedia()){
-                        media.setTweetId(tweet.getId());
-                        media.save();
+        // save only tweets from timeline
+        if(save) {
+            for (Tweet tweet : tweetListNew) {
+                System.out.println(tweet.toString());
+                Entity entities = tweet.getEntities();
+                if (entities.getMedia() != null) {
+                    if (entities.getMedia().size() > 0) {
+                        for (Media media : entities.getMedia()) {
+                            media.setTweetId(tweet.getId());
+                            media.save();
+                        }
                     }
                 }
+                tweet.getUser().save();
+                tweet.save();
             }
-            tweet.getUser().save();
-            tweet.save();
         }
         if (tweetListNew.size() > 0){
             max = tweetListNew.get(tweetListNew.size() - 1).getId();
@@ -234,7 +162,7 @@ public abstract class TweetsFragment extends Fragment {
                 .make(relativeLayout, "No Internet connection", Snackbar.LENGTH_LONG);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.twitterBlue));
         snackbar.show();
-        /*
+
         List<Tweet> tweetListDb = SQLite.select().
                 from(Tweet.class).queryList();
         for(Tweet t:tweetListDb){
@@ -243,7 +171,7 @@ public abstract class TweetsFragment extends Fragment {
             t.getEntities().setMedia(mediaList);
         }
         tweetList.addAll(tweetListDb);
-        tweetsAdapter.notifyDataSetChanged();*/
+        tweetsAdapter.notifyDataSetChanged();
     }
 
     private void setRecyclerView(){

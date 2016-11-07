@@ -25,7 +25,7 @@ public class HomeFragment extends TweetsFragment{
             client.getTweetTimelineList(max, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                    processTweetJson(json);
+                    processTweetJson(json, true);
                 }
 
                 @Override

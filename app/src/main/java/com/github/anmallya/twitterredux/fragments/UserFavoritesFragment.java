@@ -34,7 +34,7 @@ public class UserFavoritesFragment extends TweetsFragment{
         client.getUserLikesTimelineList(screenName, max, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                processTweetJson(json);
+                processTweetJson(json, false);
             }
 
             @Override

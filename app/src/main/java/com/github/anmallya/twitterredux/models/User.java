@@ -31,7 +31,7 @@ public class User extends BaseModel {
 
     @Column
     @SerializedName("name")
-    private String name; // name
+    private String name;
 
     public boolean isFollowing() {
         return isFollowing;
@@ -43,7 +43,7 @@ public class User extends BaseModel {
 
     @Column
     @SerializedName("following")
-    private boolean isFollowing; // name
+    private boolean isFollowing;
 
 
     @Column

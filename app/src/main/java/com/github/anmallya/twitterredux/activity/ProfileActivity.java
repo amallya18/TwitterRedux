@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.github.anmallya.twitterclient.R;
@@ -39,6 +40,7 @@ public class ProfileActivity extends AppCompatActivity implements ComposeFragmen
     ImageView ivBackground, ivProfile;
     private TwitterClient client;
     private LinearLayout root;
+    private ToggleButton tbFollowing;
 
     User user;
     @Override
@@ -47,21 +49,30 @@ public class ProfileActivity extends AppCompatActivity implements ComposeFragmen
         setContentView(R.layout.activity_profile);
         user = (User) Parcels.unwrap(getIntent().getParcelableExtra("user"));
         client = RestApplication.getRestClient();
-        root = (LinearLayout) findViewById(R.id.root);
+        setUpTextViews();
+        setUpToggleBtn();
+        setUpListeners();
+        setupImages();
+        setupTabs();
+    }
 
-        //CollapsingToolbarLayout ctbLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
-        //ctbLayout.setBackgroundColor(getResources().getColor(R.color.black));
+    private void setUpToggleBtn(){
+        tbFollowing = (ToggleButton)findViewById(R.id.ib_add_friend);
+        tbFollowing.setChecked(user.isFollowing());
 
-        tvName = (TextView)findViewById(R.id.tv_profile_name); tvName.setText(user.getName());
-        tvScreenName = (TextView)findViewById(R.id.tv_profile_handle); tvScreenName.setText("@"+user.getScreenName());
-        tvDesc = (TextView)findViewById(R.id.tv_desc); tvDesc.setText(user.getDescription());
-        tvFollowers = (TextView)findViewById(R.id.tv_followers_count); tvFollowers.setText(""+user.getFollowersCount());
-        tvFollowing = (TextView)findViewById(R.id.tv_following_count); tvFollowing.setText(""+user.getFriendsCount());
+        if(RestApplication.getUser().getScreenName().equals(user.getScreenName())){
+            tbFollowing.setVisibility(View.GONE);
+        }
+    }
 
-        tvFollowersText = (TextView)findViewById(R.id.tv_followers_text);
-        tvFollowingText = (TextView)findViewById(R.id.tv_following_text);
+    private void setupImages(){
+        ivBackground = (ImageView)findViewById(R.id.iv_backdrop);
+        ivProfile = (ImageView)findViewById(R.id.iv_profile);
+        Glide.with(this).load(user.getProfileBackgroundImageUrl()).placeholder(R.color.grey).into(ivBackground);
+        Glide.with(this).load(user.getProfileImageUrl()).placeholder(R.color.grey).into(ivProfile);
+    }
 
-
+    private void setUpListeners(){
         tvFollowersText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,17 +92,17 @@ public class ProfileActivity extends AppCompatActivity implements ComposeFragmen
                 startActivity(intent);
             }
         });
+    }
 
-
-        ivBackground = (ImageView)findViewById(R.id.iv_backdrop);
-        ivProfile = (ImageView)findViewById(R.id.iv_profile);
-
-        System.out.println("############# "+user.getProfileBackgroundImageUrl());
-        System.out.println("############# "+user.getProfileImageUrl());
-
-        Glide.with(this).load(user.getProfileBackgroundImageUrl()).placeholder(R.color.grey).into(ivBackground);
-        Glide.with(this).load(user.getProfileImageUrl()).placeholder(R.color.grey).into(ivProfile);
-        setupTabs();
+    private void setUpTextViews(){
+        tvScreenName = (TextView)findViewById(R.id.tv_profile_handle); tvScreenName.setText("@"+user.getScreenName());
+        tvDesc = (TextView)findViewById(R.id.tv_desc); tvDesc.setText(user.getDescription());
+        tvFollowers = (TextView)findViewById(R.id.tv_followers_count); tvFollowers.setText(""+user.getFollowersCount());
+        tvFollowing = (TextView)findViewById(R.id.tv_following_count); tvFollowing.setText(""+user.getFriendsCount());
+        tvFollowersText = (TextView)findViewById(R.id.tv_followers_text);
+        tvFollowingText = (TextView)findViewById(R.id.tv_following_text);
+        root = (LinearLayout) findViewById(R.id.root);
+        tvName = (TextView)findViewById(R.id.tv_profile_name); tvName.setText(user.getName());
     }
 
     private void setupTabs(){

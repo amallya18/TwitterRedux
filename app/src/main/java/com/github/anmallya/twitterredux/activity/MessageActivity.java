@@ -30,17 +30,24 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
         client = RestApplication.getRestClient();
+        User user = (User) Parcels.unwrap(getIntent().getParcelableExtra("user"));
+        setupToolbar();
+        setEditText(user);
+    }
+
+    private void setupToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(10);
-        User user = (User) Parcels.unwrap(getIntent().getParcelableExtra("user"));
+    }
+
+    private void setEditText(User user){
         etScreenName = (EditText) findViewById(R.id.et_screenName);
         etScreenName.setText("@"+user.getScreenName());
         etDirectMsg = (EditText) findViewById(R.id.et_directMessage);
         etScreenName.setSelection(etScreenName.getText().length());
         getSupportActionBar().setTitle(user.getName());
     }
-
 
     public void sendMessageOnClick(View view){
         String directMsg = etDirectMsg.getText().toString();
@@ -50,7 +57,6 @@ public class MessageActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
                 finish();
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject j) {
                 Log.d("Failed: ", "" + statusCode);

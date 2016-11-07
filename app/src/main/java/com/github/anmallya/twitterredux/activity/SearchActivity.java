@@ -42,7 +42,6 @@ public class SearchActivity extends AppCompatActivity implements ComposeFragment
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(5);
-        //setupTabs();
     }
 
     @Override
@@ -61,6 +60,7 @@ public class SearchActivity extends AppCompatActivity implements ComposeFragment
                 this));
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.invalidate();
+        tabLayout.setElevation(5);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -77,6 +77,7 @@ public class SearchActivity extends AppCompatActivity implements ComposeFragment
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                System.out.println("Query submitted");
                 setupTabs(query);
                 searchView.clearFocus();
                 return true;

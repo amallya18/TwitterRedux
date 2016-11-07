@@ -15,7 +15,12 @@ import com.github.anmallya.twitterclient.R;
 
 public class FollowerListViewHolder extends RecyclerView.ViewHolder {
 
+
+    private ToggleButton ivIsFriend;
+    private ImageView ivProfilePic;
+    private TextView tvDesc;
     private TextView tvProfileName, tvProfileHandler;
+
 
     public ToggleButton getIvIsFriend() {
         return ivIsFriend;
@@ -25,10 +30,6 @@ public class FollowerListViewHolder extends RecyclerView.ViewHolder {
         this.ivIsFriend = ivIsFriend;
     }
 
-    private ToggleButton ivIsFriend;
-    private ImageView ivProfilePic;
-    private TextView tvDesc;
-
     public TextView getTvDesc() {
         return tvDesc;
     }
@@ -36,7 +37,6 @@ public class FollowerListViewHolder extends RecyclerView.ViewHolder {
     public void setTvDesc(TextView tvDesc) {
         this.tvDesc = tvDesc;
     }
-
 
     public void setIvProfilePic(ImageView ivProfilePic) {
         this.ivProfilePic = ivProfilePic;

@@ -25,7 +25,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_height"
         android:background="@color/white"
-        android:elevation="4dp"
         app:tabSelectedTextColor="@color/twitterBlue"
         app:tabGravity="fill" />
 

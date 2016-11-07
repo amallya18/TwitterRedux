@@ -20,17 +20,13 @@ import cz.msebera.android.httpclient.Header;
  */
 
 public class MessagesFragment extends TweetsFragment {
+
     @Override
     protected void getTweets() {
-
-        /*
-        mSwipeRefreshLayout.setRefreshing(false);
-        avi.hide();
-        */
         client.getDirectMessages(max, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                processTweetJson(json);
+                processTweetJson(json, false);
             }
 
             @Override
@@ -42,7 +38,7 @@ public class MessagesFragment extends TweetsFragment {
     }
 
     @Override
-    protected void processTweetJson(JSONArray json){
+    protected void processTweetJson(JSONArray json, boolean save){
         ArrayList<Tweet> tweetListNew = Tweet.getDirectMsgList(json.toString());
         tweetList.addAll(tweetListNew);
         tweetsAdapter.notifyDataSetChanged();

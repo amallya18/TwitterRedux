@@ -48,20 +48,23 @@ public class FollowersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_followers);
+        client = RestApplication.getRestClient();
+        followerList = new ArrayList<User>();
+        followersAdapter = new FollowersAdapter(this, followerList, client);
         type = getIntent().getStringExtra(Consts.TYPE);
         screenName = getIntent().getStringExtra(Consts.SCREEN_NAME);
-        System.out.println("type: "+type+"screenName: "+screenName);
+        setToolbar();
+        setSwipeRefreshLayout();
+        setRecyclerView();
+        getFollowers();
+    }
+
+    private void setToolbar(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         String title = type.equals(Consts.FOLLOWING)?"Following":"Followers";
         getSupportActionBar().setTitle(title);
         getSupportActionBar().setElevation(10);
-        followerList = new ArrayList<User>();
-        client = RestApplication.getRestClient();
-        followersAdapter = new FollowersAdapter(this, followerList, client);
-        setSwipeRefreshLayout();
-        setRecyclerView();
-        getFollowers();
     }
 
     private void setSwipeRefreshLayout(){

@@ -76,18 +76,12 @@ public class TweetListActivity extends AppCompatActivity
     private ArrayList<Tweet> tweetList;
     private TweetsAdapter tweetsAdapter;
     private TwitterClient client;
-
     private TextView tvNavHeader1, tvNavHeader2;
     private ImageView ivNavHeader; LinearLayout lvNavHeader;
-
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    //private RelativeLayout relativeLayout;
     private DrawerLayout relativeLayout;
-
     private Toolbar toolbar;
     private User loggedInUser;
     private ComposeFragment composeDialog;
-    private long max = -1;
 
     ViewPager viewPager;
 
@@ -95,24 +89,20 @@ public class TweetListActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweet_list);
-        relativeLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         setViews();
         tweetList = new ArrayList<Tweet>();
         client = RestApplication.getRestClient();
         tweetsAdapter = new TweetsAdapter(this, tweetList, client);
         setDrawerViews();
         setupTabs();
-        //setSwipeRefreshLayout();
-        //setRecyclerView();
-        //getTweets();
-         getUserCred();
+        getUserCred();
     }
+
     private void setupTabs(){
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new CustomFragmentPagerAdapter(getSupportFragmentManager(),
                 this));
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        //tabLayout.setElevation(5);
         tabLayout.setupWithViewPager(viewPager);
 
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
@@ -145,51 +135,13 @@ public class TweetListActivity extends AppCompatActivity
                     }
                 }
         );
-
     }
 
     private void setViews(){
+        relativeLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //relativeLayout = (RelativeLayout) findViewById(R.id.root);
         getSupportActionBar().setTitle("Home");
-    }
-
-    private void setSwipeRefreshLayout(){
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Refresh items
-                max = -1;
-                tweetList.clear();
-                tweetsAdapter.notifyDataSetChanged();
-                getTweets();
-            }
-        });
-    }
-
-    private void setRecyclerView(){
-        RecyclerView rv = (RecyclerView)findViewById(R.id.rvTweets);
-        rv.setAdapter(tweetsAdapter);
-        LinearLayoutManager lm = new LinearLayoutManager(this);
-        rv.setLayoutManager(lm);
-        rv.addOnScrollListener(new EndlessRecyclerViewScrollListener(lm) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                getTweets();
-            }
-        });
-        ItemClickSupport.addTo(rv).setOnItemClickListener(
-                new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Intent intent = new Intent(TweetListActivity.this, TweetDetailActivity.class);
-                        intent.putExtra("tweet", Parcels.wrap(tweetList.get(position)));
-                        startActivity(intent);
-                    }
-                }
-        );
     }
 
     private void setDrawerViews(){
@@ -214,45 +166,6 @@ public class TweetListActivity extends AppCompatActivity
         ivNavHeader = (ImageView) hView.findViewById(R.id.iv_nav_header);
     }
 
-
-    private void getTweets(){
-        client.getTweetTimelineList(max, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-               processTweetJson(json);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject j) {
-                Log.d("Failed: ", ""+statusCode);
-                Log.d("Error : ", "" + throwable);
-            }
-        });
-    }
-
-    private void processTweetJson(JSONArray json){
-        ArrayList<Tweet> tweetListNew = Tweet.getTweetList(json.toString());
-        tweetList.addAll(tweetListNew);
-        tweetsAdapter.notifyDataSetChanged();
-        for(Tweet tweet:tweetListNew){
-            System.out.println(tweet.toString());
-            Entity entities = tweet.getEntities();
-            if(entities.getMedia() != null){
-                if(entities.getMedia().size()>0){
-                    for(Media media:entities.getMedia()){
-                        media.setTweetId(tweet.getId());
-                        media.save();
-                    }
-                }
-            }
-            tweet.getUser().save();
-            tweet.save();
-        }
-        max = tweetListNew.get(tweetListNew.size()-1).getId();
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
-
-
     private void getUserCred(){
         client.getCurrentUserInfo(new JsonHttpResponseHandler() {
             @Override
@@ -262,7 +175,6 @@ public class TweetListActivity extends AppCompatActivity
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject j) {
-                //super.onFailure(statusCode, headers, responseString, throwable);
                 Log.d("Failed: ", ""+statusCode);
                 Log.d("Error : ", "" + throwable);
                 if(throwable instanceof  java.io.IOException){
@@ -299,11 +211,7 @@ public class TweetListActivity extends AppCompatActivity
                 .load(user.getProfileImageUrl())
                 .transform(new CircularTransform())
                 .into(ivNavHeader);
-        /*
-        Glide.with(TweetListActivity.this)
-                .load(user.getProfileImageUrl())
-                .bitmapTransform(new RoundedCornersTransformation(TweetListActivity.this, 5, 5))
-                .into(ivNavHeader);*/
+
         Glide.with(TweetListActivity.this).load(user.getBannerUrl()).asBitmap().into(new SimpleTarget<Bitmap>(500, 500) {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -353,7 +261,6 @@ public class TweetListActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.tweet_list, menu);
         return true;
     }
@@ -387,17 +294,6 @@ public class TweetListActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
         composeDialog = ComposeFragment.newInstance(loggedInUser.getProfileImageUrl(), null);
         composeDialog.show(fm, "fragment_alert");
-    }
-
-    public void postTweet(String newTweet){
-        NetworkUtils.postTweets(client, newTweet, relativeLayout);
-        Tweet t = new Tweet();
-        t.setText(newTweet);
-        t.setUser(loggedInUser);
-        t.setEntities(new Entity());
-        t.setCreatedAt(Consts.JUST_NOW);
-        tweetList.add(0,t);
-        tweetsAdapter.notifyDataSetChanged();
     }
 
     public void onTweetPosted(String newTweet){

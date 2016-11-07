@@ -9,7 +9,6 @@ import com.github.anmallya.twitterclient.R;
 
 
 public class PhotoDetailActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,5 +17,4 @@ public class PhotoDetailActivity extends AppCompatActivity {
         ImageView imageView = (ImageView) findViewById(R.id.iv_media);
         Glide.with(this).load(imageUrl).placeholder(R.color.grey).into(imageView);
     }
-
 }

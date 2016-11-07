@@ -21,6 +21,19 @@
         android:layout_marginTop="80dp"
         android:scaleType="centerCrop"
         android:layout_marginLeft="@dimen/profile_header_left_margin"/>
+    <ToggleButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/follow_btn_toggle"
+        android:layout_below="@+id/iv_backdrop"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitXY"
+        android:textOn=""
+        android:textOff=""
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/ib_add_friend"/>
     <TextView
         android:text="SouthPark"
         android:textSize="20sp"

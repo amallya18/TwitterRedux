@@ -17,11 +17,7 @@ public class TwitterClient extends OAuthBaseClient {
     public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class;
     public static final String REST_URL = "https://api.twitter.com/1.1";
 
-    //public static final String REST_CONSUMER_KEY = "cVC9iLskldD0gGfBBy5A7IEEM";
-    //public static final String REST_CONSUMER_SECRET = "YfDJb0dQqj1ft4JGuMMRUO6zQQU3Mlj3JuWfe4UxuG0UBMxVdO";
     public static final String REST_CALLBACK_URL = "oauth://codepathtweets";
-
-
     public static final String REST_CONSUMER_KEY = "ztpNiAun5Ne8h6KW7V7amIwDS";
     public static final String REST_CONSUMER_SECRET = "RCtQ5isUnd66tEwo0cxRSYhcxWCOMqUyiy4FuCzXyyOqD167i4";
 
@@ -187,7 +183,4 @@ public class TwitterClient extends OAuthBaseClient {
         RequestParams params = new RequestParams();
         client.get(apiUrl, params, handler);
     }
-
-    // public static final String REST_CONSUMER_KEY = "Vm9jkr9TVS0yvfHfXrBWnKFEn";
-    // public static final String REST_CONSUMER_SECRET = "JsP4aEgOuGxTg9ABfCec6dVJTaQUft84GwxuV3DeciMPKi4s00";
 }

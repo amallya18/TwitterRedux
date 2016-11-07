@@ -7,12 +7,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.github.anmallya.twitterredux.fragments.HomeFragment;
 import com.github.anmallya.twitterredux.fragments.SearchTopFragment;
+import com.github.anmallya.twitterredux.helper.SmartFragmentStatePagerAdapter;
 
 /**
  * Created by anmallya on 11/5/2016.
  */
 
-    public class SearchFragmentAdapter extends FragmentPagerAdapter {
+    public class SearchFragmentAdapter extends SmartFragmentStatePagerAdapter {
         final int PAGE_COUNT = 2;
 
         private Context context;

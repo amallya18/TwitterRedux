@@ -1,17 +1,10 @@
 package com.github.anmallya.twitterredux.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
-
-import com.github.anmallya.twitterredux.adapter.TweetsAdapter;
-import com.github.anmallya.twitterredux.application.RestApplication;
-import com.github.anmallya.twitterredux.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -38,7 +31,7 @@ public class UserTweetsFragment extends TweetsFragment{
             client.getUserTimelineList(screenName, max, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                    processTweetJson(json);
+                    processTweetJson(json, false);
                 }
 
                 @Override

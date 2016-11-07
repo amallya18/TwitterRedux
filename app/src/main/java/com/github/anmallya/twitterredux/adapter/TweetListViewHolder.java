@@ -106,8 +106,6 @@ public class TweetListViewHolder extends RecyclerView.ViewHolder {
         this.ivLike = ivLike;
     }
 
-
-
     public ToggleButton getIvLike() {
         return ivLike;
     }

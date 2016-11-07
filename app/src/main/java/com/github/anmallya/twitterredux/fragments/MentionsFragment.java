@@ -20,7 +20,7 @@ public class MentionsFragment extends TweetsFragment {
             client.getMentionsTimelineList(max, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                    processTweetJson(json);
+                    processTweetJson(json, false);
                 }
 
                 @Override

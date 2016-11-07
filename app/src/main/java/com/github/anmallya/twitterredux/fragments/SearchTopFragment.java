@@ -1,20 +1,11 @@
 package com.github.anmallya.twitterredux.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
-
-import com.github.anmallya.twitterredux.models.Entity;
-import com.github.anmallya.twitterredux.models.Media;
-import com.github.anmallya.twitterredux.models.Tweet;
-import com.github.anmallya.twitterredux.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -48,7 +39,7 @@ public class SearchTopFragment extends TweetsFragment{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                processTweetJson(jsonArray);
+                processTweetJson(jsonArray, false);
             }
 
             @Override
