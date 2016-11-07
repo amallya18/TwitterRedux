@@ -8,7 +8,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,10 +33,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.github.anmallya.twitterclient.R;
+import com.github.anmallya.twitterredux.adapter.CustomFragmentPagerAdapter;
 import com.github.anmallya.twitterredux.adapter.TweetsAdapter;
 import com.github.anmallya.twitterredux.application.RestApplication;
 import com.github.anmallya.twitterredux.data.DbHelper;
 import com.github.anmallya.twitterredux.fragments.ComposeFragment;
+import com.github.anmallya.twitterredux.fragments.HomeFragment;
+import com.github.anmallya.twitterredux.helper.CircularTransform;
 import com.github.anmallya.twitterredux.helper.EndlessRecyclerViewScrollListener;
 import com.github.anmallya.twitterredux.helper.ItemClickSupport;
 import com.github.anmallya.twitterredux.models.Entity;
@@ -43,7 +48,7 @@ import com.github.anmallya.twitterredux.models.Tweet;
 import com.github.anmallya.twitterredux.models.User;
 import com.github.anmallya.twitterredux.network.NetworkUtils;
 import com.github.anmallya.twitterredux.network.TwitterClient;
-import com.github.anmallya.twitterredux.utils.Constants;
+import com.github.anmallya.twitterredux.utils.Consts;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -61,10 +66,12 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-import static com.github.anmallya.twitterclient.models.User_Table.url;
+import static com.github.anmallya.twitterredux.utils.Consts.imageResId;
+import static com.github.anmallya.twitterredux.utils.Consts.imageResIdSel;
+import static com.github.anmallya.twitterredux.utils.Consts.tabTitles;
 
 public class TweetListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ComposeFragment.OnPostTweetListener {
 
     private ArrayList<Tweet> tweetList;
     private TweetsAdapter tweetsAdapter;
@@ -74,33 +81,77 @@ public class TweetListActivity extends AppCompatActivity
     private ImageView ivNavHeader; LinearLayout lvNavHeader;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RelativeLayout relativeLayout;
+    //private RelativeLayout relativeLayout;
+    private DrawerLayout relativeLayout;
 
     private Toolbar toolbar;
     private User loggedInUser;
     private ComposeFragment composeDialog;
     private long max = -1;
 
+    ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweet_list);
+        relativeLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         setViews();
         tweetList = new ArrayList<Tweet>();
         client = RestApplication.getRestClient();
         tweetsAdapter = new TweetsAdapter(this, tweetList, client);
         setDrawerViews();
-        setSwipeRefreshLayout();
-        setRecyclerView();
-        getTweets();
-        getUserCred();
+        setupTabs();
+        //setSwipeRefreshLayout();
+        //setRecyclerView();
+        //getTweets();
+         getUserCred();
+    }
+    private void setupTabs(){
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new CustomFragmentPagerAdapter(getSupportFragmentManager(),
+                this));
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        //tabLayout.setElevation(5);
+        tabLayout.setupWithViewPager(viewPager);
+
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            tabLayout.getTabAt(i).setIcon(imageResId[i]);
+        }
+        tabLayout.getTabAt(0).setIcon(imageResIdSel[0]);
+        setTabSelectionListeners(tabLayout, viewPager);
     }
 
+    private void setTabSelectionListeners(TabLayout tabLayout, ViewPager viewPager){
+        tabLayout.setOnTabSelectedListener(
+                new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        super.onTabSelected(tab);
+                        tab.setIcon(imageResIdSel[tab.getPosition()]);
+                        getSupportActionBar().setTitle(tabTitles[tab.getPosition()]);
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+                        super.onTabUnselected(tab);
+                        tab.setIcon(imageResId[tab.getPosition()]);
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+                        super.onTabReselected(tab);
+                    }
+                }
+        );
+
+    }
 
     private void setViews(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        relativeLayout = (RelativeLayout) findViewById(R.id.root);
+        //relativeLayout = (RelativeLayout) findViewById(R.id.root);
         getSupportActionBar().setTitle("Home");
     }
 
@@ -215,7 +266,7 @@ public class TweetListActivity extends AppCompatActivity
                 Log.d("Failed: ", ""+statusCode);
                 Log.d("Error : ", "" + throwable);
                 if(throwable instanceof  java.io.IOException){
-                   noInternet();
+                   //noInternet();
                 }
             }
         });
@@ -228,11 +279,25 @@ public class TweetListActivity extends AppCompatActivity
         JsonElement tweetElement = parser.parse(json.toString());
         JsonObject jObject = tweetElement.getAsJsonObject();
         User user = gson.fromJson(jObject, User.class);
+
+        RestApplication.setUser(user);
+
         loggedInUser = user;
         tvNavHeader1.setText(user.getName());
         tvNavHeader2.setText("@"+user.getScreenName());
+
+        ivNavHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TweetListActivity.this, ProfileActivity.class);
+                intent.putExtra("user", Parcels.wrap(loggedInUser));
+                startActivity(intent);
+            }
+        });
+
         Picasso.with(this)
                 .load(user.getProfileImageUrl())
+                .transform(new CircularTransform())
                 .into(ivNavHeader);
         /*
         Glide.with(TweetListActivity.this)
@@ -295,8 +360,12 @@ public class TweetListActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
+        if (id == R.id.action_search) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -316,7 +385,7 @@ public class TweetListActivity extends AppCompatActivity
 
     private void showComposeDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        composeDialog = ComposeFragment.newInstance(loggedInUser.getProfileImageUrl());
+        composeDialog = ComposeFragment.newInstance(loggedInUser.getProfileImageUrl(), null);
         composeDialog.show(fm, "fragment_alert");
     }
 
@@ -326,8 +395,14 @@ public class TweetListActivity extends AppCompatActivity
         t.setText(newTweet);
         t.setUser(loggedInUser);
         t.setEntities(new Entity());
-        t.setCreatedAt(Constants.JUST_NOW);
+        t.setCreatedAt(Consts.JUST_NOW);
         tweetList.add(0,t);
         tweetsAdapter.notifyDataSetChanged();
+    }
+
+    public void onTweetPosted(String newTweet){
+        NetworkUtils.postTweets(client, newTweet, relativeLayout);
+        HomeFragment fragment = (HomeFragment)((CustomFragmentPagerAdapter)viewPager.getAdapter()).getRegisteredFragment(0);
+        fragment.postTweet(newTweet, loggedInUser);
     }
 }

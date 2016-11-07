@@ -1,5 +1,7 @@
 package com.github.anmallya.twitterredux.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.parceler.Parcel;
 
 import java.util.List;
@@ -19,8 +21,6 @@ public class Entity {
 
     private List<Media> media;
 
-
-    /*
     public List<Extended> getExtendedList() {
         return extendedList;
     }
@@ -30,6 +30,6 @@ public class Entity {
     }
 
     @SerializedName("extended_entities")
-    private List<Extended> extendedList; */
+    private List<Extended> extendedList;
 
 }

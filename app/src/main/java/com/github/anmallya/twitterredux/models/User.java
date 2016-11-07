@@ -1,6 +1,11 @@
 package com.github.anmallya.twitterredux.models;
 
 import com.github.anmallya.twitterredux.data.TweetsDatabase;
+import com.github.anmallya.twitterredux.utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -8,6 +13,8 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.parceler.Parcel;
+
+import java.util.ArrayList;
 
 /**
  * Created by anmallya on 10/28/2016.
@@ -25,6 +32,19 @@ public class User extends BaseModel {
     @Column
     @SerializedName("name")
     private String name; // name
+
+    public boolean isFollowing() {
+        return isFollowing;
+    }
+
+    public void setFollowing(boolean following) {
+        isFollowing = following;
+    }
+
+    @Column
+    @SerializedName("following")
+    private boolean isFollowing; // name
+
 
     @Column
     @SerializedName("description")
@@ -147,10 +167,11 @@ public class User extends BaseModel {
     }
 
     public String getProfileBackgroundImageUrl() {
-        return profileBackgroundImageUrl;
+        return Utils.editImage(profileBackgroundImageUrl);
     }
 
     public void setProfileBackgroundImageUrl(String profileBackgroundImageUrl) {
+        //profileBackgroundImageUrl = Utils.editImage(profileBackgroundImageUrl);
         this.profileBackgroundImageUrl = profileBackgroundImageUrl;
     }
 
@@ -163,10 +184,11 @@ public class User extends BaseModel {
     }
 
     public String getProfileImageUrl() {
-        return profileImageUrl;
+        return Utils.editImage(profileImageUrl);
     }
 
     public void setProfileImageUrl(String profileImageUrl) {
+        //profileImageUrl = Utils.editImage(profileImageUrl);
         this.profileImageUrl = profileImageUrl;
     }
 
@@ -185,4 +207,19 @@ public class User extends BaseModel {
     public void setScreenName(String screenName) {
         this.screenName = screenName;
     }
+
+    public static ArrayList<User> getUserList(String jArrayString){
+        JsonParser parser = new JsonParser();
+        JsonElement tweetElement = parser.parse(jArrayString);
+        JsonArray jArray = tweetElement.getAsJsonArray();
+        ArrayList<User> userList = new ArrayList<User>();
+        int length = jArray.size();
+        for(int i = 0; i < length; i ++){
+            Gson gson = new Gson();
+            User user = gson.fromJson(jArray.get(i), User.class);
+            userList.add(user);
+        }
+        return userList;
+    }
+
 }

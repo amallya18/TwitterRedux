@@ -10,6 +10,10 @@
     <color name="black">#000000</color>
     <color name="red">#FF0000</color>
 
+    <color name="linkBlue">#00aced</color>
+
+    <color name="twitterBlue">#00aced</color>
+
     <color name="favRed">#E51534</color>
     <color name="darkGrey">#999999</color>
     <color name="retweetGreen">#00FF00</color>

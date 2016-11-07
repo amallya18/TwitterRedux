@@ -1,5 +1,6 @@
 package com.github.anmallya.twitterredux.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -33,13 +35,17 @@ public class ComposeFragment extends DialogFragment {
     private ImageButton ibCancel;
     private ImageButton ibDrafts;
 
+    private static final String PROFILE_PIC = "profile pic";
+    private static final String SCREEN_NAME = "screen name";
+
     public ComposeFragment() {
     }
 
-    public static ComposeFragment newInstance(String profileImage) {
+    public static ComposeFragment newInstance(String profileImage, String screenName) {
         ComposeFragment frag = new ComposeFragment();
         Bundle args = new Bundle();
-        args.putString("profile", profileImage);
+        args.putString(PROFILE_PIC, profileImage);
+        args.putString(SCREEN_NAME, screenName);
         frag.setArguments(args);
         return frag;
     }
@@ -81,6 +87,14 @@ public class ComposeFragment extends DialogFragment {
 
     private void setEditText(View view){
         final EditText etCompose = (EditText)view.findViewById(R.id.et_compose);
+
+        String screenName = getArguments().getString(SCREEN_NAME);
+
+        if(screenName != null){
+            etCompose.setText("@"+screenName+" ");
+            etCompose.setSelection(etCompose.getText().length());
+        }
+
         final TextView tvWordCount = (TextView)view.findViewById(R.id.tv_word_count);
         etCompose.addTextChangedListener(new TextWatcher() {
             @Override
@@ -110,14 +124,32 @@ public class ComposeFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 String tweet = mEditText.getText().toString();
-                ((TweetListActivity)getActivity()).postTweet(tweet);
+                //((TweetListActivity)getActivity()).postTweet(tweet);
+                listener.onTweetPosted(tweet);
                 dismiss();
             }
         });
     }
 
+    public interface OnPostTweetListener {
+        public void onTweetPosted(String tweest);
+    }
+
+    private OnPostTweetListener listener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnPostTweetListener) {
+            listener = (OnPostTweetListener) context;
+        } else {
+            throw new ClassCastException(context.toString()
+                    + " must implement ComposeFragment.OnPostTweetListener");
+        }
+    }
+
     private void setWindowAndPhotos(){
-        String profileUrl = getArguments().getString("profile", "Enter Name");
+        String profileUrl = getArguments().getString(PROFILE_PIC, "Enter Name");
         Glide.with(getActivity()).load(profileUrl).into(ib);
 
         getDialog().getWindow().setSoftInputMode(

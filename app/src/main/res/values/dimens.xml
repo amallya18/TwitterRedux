@@ -22,4 +22,10 @@
 
     <dimen name="tweet_text_size">15dp</dimen>
 
+    <dimen name="tab_height">55dp</dimen>
+
+    <dimen name="profile_header_left_margin">15dp</dimen>
+    <dimen name="twitter_profile_text_size">13sp</dimen>
+
+
 </resources>

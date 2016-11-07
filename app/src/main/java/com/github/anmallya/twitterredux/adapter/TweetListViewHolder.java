@@ -2,12 +2,15 @@ package com.github.anmallya.twitterredux.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.github.anmallya.twitterclient.R;
+import com.malmstein.fenster.controller.MediaFensterPlayerController;
+import com.malmstein.fenster.view.FensterVideoView;
 
 /**
  * Created by anmallya on 10/21/2016.
@@ -16,13 +19,44 @@ public class TweetListViewHolder extends RecyclerView.ViewHolder {
 
     private ToggleButton ivRetweet;
     private TextView tvProfileName, tvProfileHandler, tvCreatedTime, tvTweet, tvRetweetCount, tvLikeCount;
-    private ImageView ivMedia;
+    private ImageView ivMedia, ivProfilePic;
+    private ImageButton ivReply, ivDirectMsg;
 
-    public ImageButton getIvProfilePic() {
+    public FensterVideoView getTextureView() {
+        return textureView;
+    }
+
+    public void setTextureView(FensterVideoView textureView) {
+        this.textureView = textureView;
+    }
+
+    public MediaFensterPlayerController getPlayerController() {
+        return playerController;
+    }
+
+    public void setPlayerController(MediaFensterPlayerController playerController) {
+        this.playerController = playerController;
+    }
+
+    private FensterVideoView textureView;
+    private MediaFensterPlayerController playerController;
+
+    public FrameLayout getVideoFrame() {
+        return videoFrame;
+    }
+
+    public void setVideoFrame(FrameLayout videoFrame) {
+        this.videoFrame = videoFrame;
+    }
+
+    private FrameLayout videoFrame;
+
+
+    public ImageView getIvProfilePic() {
         return ivProfilePic;
     }
 
-    public void setIvProfilePic(ImageButton ivProfilePic) {
+    public void setIvProfilePic(ImageView ivProfilePic) {
         this.ivProfilePic = ivProfilePic;
     }
 
@@ -102,7 +136,7 @@ public class TweetListViewHolder extends RecyclerView.ViewHolder {
         this.ivLike = ivLike;
     }
 
-    private ImageButton ivProfilePic, ivReply, ivDirectMsg;
+
 
     public ToggleButton getIvLike() {
         return ivLike;
@@ -132,7 +166,7 @@ public class TweetListViewHolder extends RecyclerView.ViewHolder {
 
         // set image views
         setIvDirectMsg((ImageButton)v.findViewById(R.id.iv_direct_msg));
-        setIvProfilePic((ImageButton)v.findViewById(R.id.iv_profile_pic));
+        setIvProfilePic((ImageView)v.findViewById(R.id.iv_profile_pic));
         setIvReply((ImageButton)v.findViewById(R.id.iv_reply));
 
         // set toggle buttons
@@ -140,6 +174,10 @@ public class TweetListViewHolder extends RecyclerView.ViewHolder {
         setIvRetweet((ToggleButton)v.findViewById(R.id.iv_retweet));
 
         setIvMedia((ImageView)v.findViewById(R.id.iv_media));
+
+        setTextureView((FensterVideoView)v.findViewById(R.id.play_video_texture));
+        setPlayerController((MediaFensterPlayerController)v.findViewById(R.id.play_video_controller));
+        setVideoFrame((FrameLayout)v.findViewById(R.id.video_frame));
     }
 
 }

@@ -3,6 +3,7 @@ package com.github.anmallya.twitterredux.application;
 import android.app.Application;
 import android.content.Context;
 
+import com.github.anmallya.twitterredux.models.User;
 import com.github.anmallya.twitterredux.network.TwitterClient;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowLog;
@@ -14,6 +15,16 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 
 public class RestApplication extends Application {
     private static Context context;
+
+    public static User getUser() {
+        return user;
+    }
+
+    public static void setUser(User user) {
+        RestApplication.user = user;
+    }
+
+    private static User user;
 
     @Override
     public void onCreate() {

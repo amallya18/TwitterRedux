@@ -11,9 +11,18 @@ import java.util.Locale;
  */
 
 public class Utils {
+
+    public static String editImage(String url){
+        if(url != null){
+            return url.replace("_normal","");
+        }
+        return url;
+    }
+
+
     public static String getTwitterDate(String date)
     {
-        if(date.equals(Constants.JUST_NOW)){
+        if(date.equals(Consts.JUST_NOW)){
             return date;
         }
         final String TWITTER = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
@@ -45,7 +54,7 @@ public class Utils {
 
     public static String getTwitterDateVerbose(String date)
     {
-        if(date.equals(Constants.JUST_NOW)){
+        if(date.equals(Consts.JUST_NOW)){
             return date;
         }
         final String TWITTER = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";

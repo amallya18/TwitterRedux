@@ -1,7 +1,7 @@
 package com.github.anmallya.twitterredux.data;
 
 import com.github.anmallya.twitterredux.models.Media;
-import com.github.anmallya.twitterclient.models.Media_Table;
+import com.github.anmallya.twitterredux.models.Media_Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.List;

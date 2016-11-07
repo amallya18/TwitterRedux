@@ -20,7 +20,7 @@ import com.github.anmallya.twitterredux.application.RestApplication;
 import com.github.anmallya.twitterredux.models.Tweet;
 import com.github.anmallya.twitterredux.network.NetworkUtils;
 import com.github.anmallya.twitterredux.network.TwitterClient;
-import com.github.anmallya.twitterredux.utils.Constants;
+import com.github.anmallya.twitterredux.utils.Consts;
 import com.github.anmallya.twitterredux.utils.Utils;
 
 import org.parceler.Parcels;
@@ -78,7 +78,7 @@ public class TweetDetailActivity extends AppCompatActivity {
                 ivMedia.setVisibility(View.VISIBLE);
                 System.out.println("Media url: "+tweet.getEntities().getMedia().get(0).getMediaUrl());
                 Glide.with(this).load(tweet.getEntities().getMedia().get(0).getMediaUrl())
-                        .bitmapTransform(new RoundedCornersTransformation(this, Constants.RL, Constants.RL))
+                        .bitmapTransform(new RoundedCornersTransformation(this, Consts.RL, Consts.RL))
                         .placeholder(R.color.grey).into(ivMedia);
             } else{
                 ivMedia.setVisibility(View.GONE);
@@ -98,7 +98,7 @@ public class TweetDetailActivity extends AppCompatActivity {
         });
 
         Glide.with(this).load(tweet.getUser().getProfileImageUrl())
-                .bitmapTransform(new RoundedCornersTransformation(this, Constants.RS, Constants.RS))
+                .bitmapTransform(new RoundedCornersTransformation(this, Consts.RS, Consts.RS))
                 .placeholder(R.color.grey).into(ivProfilePic);
     }
 

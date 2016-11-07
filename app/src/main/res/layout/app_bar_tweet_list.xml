@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.github.anmallya.twitterclient.com.github.anmallya.twitterredux.activity.TweetListActivity">
+    tools:context="com.github.anmallya.twitterredux.activity.TweetListActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:elevation="0dp"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
@@ -18,6 +19,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="#ffffff"
             android:titleTextColor="#000000"
+            android:elevation="1dp"
             app:theme="@style/AppTheme.Toolbar"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:titleTextAppearance="@style/AppTheme.Toolbar.Title"
@@ -25,7 +27,6 @@
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
-
     <include layout="@layout/content_tweet_list" />
 
     <android.support.design.widget.FloatingActionButton
@@ -34,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:background="@color/twitterBlue"
         app:srcCompat="@drawable/ic_action_compose_white" />
 
 </android.support.design.widget.CoordinatorLayout>

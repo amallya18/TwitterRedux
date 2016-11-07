@@ -4,6 +4,7 @@ import com.github.anmallya.twitterredux.data.TweetsDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -12,6 +13,9 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
@@ -23,6 +27,16 @@ import java.util.ArrayList;
 @Parcel
 @Table(database = TweetsDatabase.class)
 public class Tweet extends BaseModel {
+
+    private DisplayType displayType = DisplayType.NORMAL;
+
+    public DisplayType getDisplayType() {
+        return displayType;
+    }
+
+    public void setDisplayType(DisplayType displayType) {
+        this.displayType = displayType;
+    }
 
     @Column
     @SerializedName("created_at")
@@ -154,6 +168,34 @@ public class Tweet extends BaseModel {
             Gson gson = new Gson();
             Tweet tweet = gson.fromJson(jArray.get(i), Tweet.class);
             tweetList.add(tweet);
+        }
+        return tweetList;
+    }
+
+    public static ArrayList<Tweet> getDirectMsgList(String jArrayString){
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%% "+jArrayString);
+        ArrayList<Tweet> tweetList = new ArrayList<Tweet>();
+        try {
+            JSONArray jArrayNew = new JSONArray(jArrayString);
+            int length = jArrayNew.length();
+            for(int i = 0; i < length; i++){
+                JSONObject jO = jArrayNew.getJSONObject(i);
+                String text = jO.getString("text");
+                String createdDate = jO.getString("created_at");
+                JSONObject sender =  jO.getJSONObject("sender");
+                Gson gson = new Gson();
+                JsonParser parser = new JsonParser();
+                User user = gson.fromJson(parser.parse(sender.toString()), User.class);
+                Tweet tweet = new Tweet();
+                tweet.setText(text);
+                tweet.setUser(user);
+                tweet.setDisplayType(DisplayType.MESSAGE);
+                tweet.setEntities(new Entity());
+                tweet.setCreatedAt(createdDate);
+                tweetList.add(tweet);
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
         }
         return tweetList;
     }
