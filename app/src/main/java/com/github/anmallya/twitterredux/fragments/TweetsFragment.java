@@ -155,7 +155,7 @@ public abstract class TweetsFragment extends Fragment {
     protected void handleNetworkFailure(int statusCode, Throwable throwable ){
         Log.d("Failed: ", "" + statusCode);
         Log.d("Error : ", "" + throwable);
-        if(throwable instanceof  java.io.IOException){
+        if(throwable instanceof java.io.IOException){
             noInternet();
         }
         avi.hide();

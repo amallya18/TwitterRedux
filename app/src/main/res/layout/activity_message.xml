@@ -29,6 +29,7 @@
         android:layout_below="@id/toolbar"
         android:id="@+id/et_screenName"/>
     <Button
+        style="?android:attr/borderlessButtonStyle"
         android:text ="Send"
         android:textSize="17sp"
         android:background="#FFFFFFFF"

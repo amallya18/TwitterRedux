@@ -86,6 +86,17 @@ public class Tweet extends BaseModel {
     @SerializedName("entities")
     private Entity entities;
 
+    public Entity getExtendedEntities() {
+        return extendedEntities;
+    }
+
+    public void setExtendedEntities(Entity extendedEntities) {
+        this.extendedEntities = extendedEntities;
+    }
+
+    @SerializedName("extended_entities")
+    private Entity extendedEntities;
+
     public Entity getEntities() {
         return entities;
     }
@@ -159,6 +170,7 @@ public class Tweet extends BaseModel {
     }
 
     public static ArrayList<Tweet> getTweetList(String jArrayString){
+        System.out.println(jArrayString);
         JsonParser parser = new JsonParser();
         JsonElement tweetElement = parser.parse(jArrayString);
         JsonArray jArray = tweetElement.getAsJsonArray();

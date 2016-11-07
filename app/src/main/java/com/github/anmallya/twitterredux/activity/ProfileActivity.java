@@ -1,6 +1,7 @@
 package com.github.anmallya.twitterredux.activity;
 
 import android.content.Intent;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -47,9 +48,10 @@ public class ProfileActivity extends AppCompatActivity implements ComposeFragmen
         user = (User) Parcels.unwrap(getIntent().getParcelableExtra("user"));
         client = RestApplication.getRestClient();
         root = (LinearLayout) findViewById(R.id.root);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-        //getSupportActionBar().setTitle(user.getName());
+
+        //CollapsingToolbarLayout ctbLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
+        //ctbLayout.setBackgroundColor(getResources().getColor(R.color.black));
+
         tvName = (TextView)findViewById(R.id.tv_profile_name); tvName.setText(user.getName());
         tvScreenName = (TextView)findViewById(R.id.tv_profile_handle); tvScreenName.setText("@"+user.getScreenName());
         tvDesc = (TextView)findViewById(R.id.tv_desc); tvDesc.setText(user.getDescription());

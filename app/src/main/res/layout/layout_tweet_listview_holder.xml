@@ -91,38 +91,6 @@
         android:layout_below="@+id/tv_tweet"
         android:layout_toRightOf="@+id/iv_profile_pic"
         android:id="@+id/iv_media" />
-    <FrameLayout
-        android:id="@+id/video_frame"
-        android:visibility="gone"
-        android:layout_width="330dp"
-        android:layout_height="200dp"
-        android:layout_alignRight="@id/tv_tweet"
-        android:layout_alignLeft="@id/tv_tweet"
-        android:paddingBottom="10dp"
-        android:layout_marginBottom="5dp"
-        android:layout_below="@+id/tv_tweet"
-        android:layout_toRightOf="@+id/iv_profile_pic"
-        android:background="@color/white">
-
-        <com.malmstein.fenster.view.FensterVideoView
-            android:id="@+id/play_video_texture"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:keepScreenOn="true"
-            android:visibility="gone"
-            android:fitsSystemWindows="true" />
-
-        <com.malmstein.fenster.controller.MediaFensterPlayerController
-            android:id="@+id/play_video_controller"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:animateLayoutChanges="true"
-            android:visibility="gone"
-            android:fitsSystemWindows="true" />
-
-    </FrameLayout>
-
     <ImageButton
         android:scaleType="fitXY"
         android:layout_width="@dimen/twitter_btn_size"
@@ -152,9 +120,10 @@
         android:text="TextView"
         android:textColor="#999999"
         android:layout_alignBaseline="@id/iv_retweet"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
+        android:gravity="left"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/twitter_btn_right_margin"
+        android:layout_marginRight="@dimen/twitter_btn_right_margin_small"
         android:layout_below="@+id/iv_media"
         android:layout_toRightOf="@+id/iv_retweet"
         android:layout_toEndOf="@+id/iv_retweet"
@@ -175,10 +144,11 @@
 
     <TextView
         android:text="TextView"
-        android:layout_marginRight="@dimen/twitter_btn_right_margin"
+        android:layout_marginRight="@dimen/twitter_btn_right_margin_small"
         android:textColor="#999999"
         android:layout_alignBaseline="@id/iv_like"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
+        android:gravity="left"
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_media"
         android:layout_toRightOf="@+id/iv_like"

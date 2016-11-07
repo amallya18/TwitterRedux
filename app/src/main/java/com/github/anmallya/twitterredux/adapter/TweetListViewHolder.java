@@ -22,36 +22,6 @@ public class TweetListViewHolder extends RecyclerView.ViewHolder {
     private ImageView ivMedia, ivProfilePic;
     private ImageButton ivReply, ivDirectMsg;
 
-    public FensterVideoView getTextureView() {
-        return textureView;
-    }
-
-    public void setTextureView(FensterVideoView textureView) {
-        this.textureView = textureView;
-    }
-
-    public MediaFensterPlayerController getPlayerController() {
-        return playerController;
-    }
-
-    public void setPlayerController(MediaFensterPlayerController playerController) {
-        this.playerController = playerController;
-    }
-
-    private FensterVideoView textureView;
-    private MediaFensterPlayerController playerController;
-
-    public FrameLayout getVideoFrame() {
-        return videoFrame;
-    }
-
-    public void setVideoFrame(FrameLayout videoFrame) {
-        this.videoFrame = videoFrame;
-    }
-
-    private FrameLayout videoFrame;
-
-
     public ImageView getIvProfilePic() {
         return ivProfilePic;
     }
@@ -175,9 +145,9 @@ public class TweetListViewHolder extends RecyclerView.ViewHolder {
 
         setIvMedia((ImageView)v.findViewById(R.id.iv_media));
 
-        setTextureView((FensterVideoView)v.findViewById(R.id.play_video_texture));
-        setPlayerController((MediaFensterPlayerController)v.findViewById(R.id.play_video_controller));
-        setVideoFrame((FrameLayout)v.findViewById(R.id.video_frame));
+        //setTextureView((FensterVideoView)v.findViewById(R.id.play_video_texture));
+        //setPlayerController((MediaFensterPlayerController)v.findViewById(R.id.play_video_controller));
+        //setVideoFrame((FrameLayout)v.findViewById(R.id.video_frame));
     }
 
 }

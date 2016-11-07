@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.github.anmallya.twitterclient.R;
+import com.github.anmallya.twitterredux.activity.MessageActivity;
 import com.github.anmallya.twitterredux.activity.PhotoDetailActivity;
 import com.github.anmallya.twitterredux.activity.ProfileActivity;
 import com.github.anmallya.twitterredux.application.RestApplication;
@@ -26,16 +27,16 @@ import com.github.anmallya.twitterredux.network.NetworkUtils;
 import com.github.anmallya.twitterredux.network.TwitterClient;
 import com.github.anmallya.twitterredux.utils.Consts;
 import com.github.anmallya.twitterredux.utils.Utils;
-import com.malmstein.fenster.controller.MediaFensterPlayerController;
-import com.malmstein.fenster.controller.SimpleMediaFensterPlayerController;
-import com.malmstein.fenster.view.FensterVideoView;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+//import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 import static android.view.View.GONE;
 
@@ -133,9 +134,6 @@ public class TweetsAdapter extends
         if(tweet.getEntities().getMedia()!=null){
             if(tweet.getEntities().getMedia().size() > 0){
                 vh.getIvMedia().setVisibility(View.VISIBLE);
-                vh.getVideoFrame().setVisibility(View.GONE);
-                //vh.getPlayerController().setVisibility(View.GONE);
-                //vh.getTextureView().setVisibility(View.GONE);
                 vh.getIvMedia().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -145,27 +143,17 @@ public class TweetsAdapter extends
                     }
                 });
                 System.out.println("Media url: "+tweet.getEntities().getMedia().get(0).getMediaUrl());
-                Glide.with(getContext()).load(tweet.getEntities().getMedia().get(0).getMediaUrl()).bitmapTransform(new RoundedCornersTransformation(getContext(), Consts.RL, Consts.RL)).placeholder(R.color.grey).into(vh.getIvMedia());
+                Picasso.with(mContext).
+                        load(tweet.getEntities().getMedia().get(0).getMediaUrl())
+                        .transform(new RoundedCornersTransformation(Consts.RL, Consts.RL)).
+                        placeholder(R.color.grey).into(vh.getIvMedia());
+                //Glide.with(getContext()).load(tweet.getEntities().getMedia().get(0).getMediaUrl()).bitmapTransform(new jp.wasabeef.glide.transformations.RoundedCornersTransformation(getContext(), Consts.RL, Consts.RL)).placeholder(R.color.grey).into(vh.getIvMedia());
             } else{
                 vh.getIvMedia().setVisibility(GONE);
-            }
-        } else if(tweet.getEntities().getExtendedList()!=null){
-            if(tweet.getEntities().getExtendedList().size() > 0){
-                Extended extended = tweet.getEntities().getExtendedList().get(0);
-                if(extended.getType().equals("video")){
-                    showVideo(extended, vh);
-                    vh.getIvMedia().setVisibility(GONE);
-                    vh.getVideoFrame().setVisibility(View.VISIBLE);
-                    //vh.getPlayerController().setVisibility(View.VISIBLE);
-                    //vh.getTextureView().setVisibility(View.VISIBLE);
-                }
             }
         }
         else {
             vh.getIvMedia().setVisibility(GONE);
-            vh.getVideoFrame().setVisibility(View.GONE);
-            /// /vh.getPlayerController().setVisibility(View.GONE);
-            //vh.getTextureView().setVisibility(View.GONE);
         }
 
         ImageButton ibReply = vh.getIvReply();
@@ -173,6 +161,16 @@ public class TweetsAdapter extends
             @Override
             public void onClick(View v) {
                 showComposeDialog(tweet.getUser());
+            }
+        });
+
+        ImageButton ibMessage = vh.getIvDirectMsg();
+        ibMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), MessageActivity.class);
+                intent.putExtra("user", Parcels.wrap(tweet.getUser()));
+                getContext().startActivity(intent);
             }
         });
 
@@ -185,7 +183,10 @@ public class TweetsAdapter extends
                 getContext().startActivity(intent);
             }
         });
-        Glide.with(getContext()).load(tweet.getUser().getProfileImageUrl()).bitmapTransform(new RoundedCornersTransformation(getContext(), 6, 6)).placeholder(R.color.grey).into(ib);
+        Picasso.with(mContext).load(tweet.getUser().getProfileImageUrl())
+                .transform(new RoundedCornersTransformation(Consts.RL, Consts.RL)).placeholder(R.color.grey).into(ib);
+
+        //Glide.with(getContext()).load(tweet.getUser().getProfileImageUrl()).bitmapTransform(new RoundedCornersTransformation(getContext(), 6, 6)).placeholder(R.color.grey).into(ib);
     }
 
     private void setToggleListners(final TweetListViewHolder vh,final  Tweet tweet){
@@ -224,15 +225,6 @@ public class TweetsAdapter extends
         });
     }
 
-    void showVideo(Extended extended, TweetListViewHolder v){
-        FensterVideoView textureView = v.getTextureView();
-        MediaFensterPlayerController playerController = v.getPlayerController();
-        textureView.setMediaController(playerController);
-
-        textureView.setVideo("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
-                SimpleMediaFensterPlayerController.DEFAULT_VIDEO_START);
-        textureView.start();
-    }
 
     private void configureViewHolder(final TweetListViewHolder vh, int position) {
         final Tweet tweet = tweetList.get(position);

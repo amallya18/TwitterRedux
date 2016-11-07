@@ -71,7 +71,8 @@
         <activity
             android:name="com.github.anmallya.twitterredux.activity.MessageActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.github.anmallya.twitterredux.activity.PhotoDetailActivity"></activity>
+        <activity android:name="com.github.anmallya.twitterredux.activity.PhotoDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" ></activity>
     </application>
 
 </manifest>
