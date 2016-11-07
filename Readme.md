@@ -47,7 +47,16 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+part 1: home, mentions, direct message, search.
+http://sendvid.com/6ng53ae7.mp4
+
+part 2: friend profile
+http://sendvid.com/b84g1qaa.mp4
+
+part 3: current user profile
+http://sendvid.com/sybxss0f.mp4
+
+
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
